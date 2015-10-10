@@ -1,12 +1,15 @@
 package powerplug
 
 import (
+	"appengine"
 	"capitalone"
 	"craigslist"
+	"encoding/json"
 	"fmt"
-	"go-zoo/bone"
 	"net/http"
 	"postmates"
+
+	"github.com/go-zoo/bone"
 )
 
 type MainRequest struct {
@@ -36,18 +39,20 @@ func RequestHandler(rw http.ResponseWriter, req *http.Request) {
 	var request MainRequest
 	err := decoder.Decode(&request)
 	if err != nil {
-		panic()
+		panic(err)
 	}
 	listing, err := craigslist.NewListing(c, request.cl_url)
 	if err != nil {
-		panic()
+		panic(err)
 	}
-	co_resp, err := capitalone.CreateTransfer(request.co_payer_id, request.co_payee_id, amount)
+	co_resp, err := capitalone.CreateTransfer(c, request.co_payer_id, request.co_payee_id, listing.Price)
 	if err != nil {
-		panic()
+		panic(err)
 	}
-	pm_resp, err := postmates.CreateDelivery(c, title, request.pm_pickup_name, request.pm_pickup_address, request.pm_pickup_phone_number, "Craigslist", "", request.pm_dropoff_name, request.pm_dropoff_address, request.pm_dropoff_phone_number, "Craigslist", "")
+	fmt.Println(co_resp)
+	pm_resp, err := postmates.CreateDelivery(c, listing.Title, request.pm_pickup_name, request.pm_pickup_address, request.pm_pickup_phone_number, "Craigslist", "", request.pm_dropoff_name, request.pm_dropoff_address, request.pm_dropoff_phone_number, "Craigslist", "")
 	if err != nil {
-		panic()
+		panic(err)
 	}
+	fmt.Println(pm_resp)
 }

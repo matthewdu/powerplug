@@ -3,8 +3,8 @@ package capitalone
 import (
 	"appengine"
 	"appengine/urlfetch"
+	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -22,7 +22,7 @@ func CreateTransfer(c appengine.Context, payer_id string, payee_id string, amoun
 	req := CreateTransferRequest{
 		medium:   "balance",
 		payee_id: payee_id,
-		amound:   amount,
+		amount:   amount,
 	}
 	encoded, err := json.Marshal(req)
 	if err != nil {

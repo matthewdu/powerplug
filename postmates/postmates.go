@@ -3,7 +3,8 @@ package postmates
 import (
 	"appengine"
 	"appengine/urlfetch"
-	"fmt"
+	"bytes"
+	"encoding/json"
 	"net/http"
 )
 
@@ -21,11 +22,12 @@ type CreateDeliveryRequest struct {
 	dropoff_notes         string
 }
 
-const BASE_URL string = "https://api.postmates.com/"
+const BASE_URL string = "https://api.postmates.com"
+const ID string = "6"
 
 func CreateDelivery(c appengine.Context, manifest string, pickup_name string, pickup_address string, pickup_phone_number string, pickup_business_name string, pickup_notes string, dropoff_name string, dropoff_address string, dropoff_phone_number string, dropoff_business_name string, dropoff_notes string) (*http.Response, error) {
 	client := urlfetch.Client(c)
-	url := BASE_URL + "/accounts/" + payer_id + "/transfers"
+	url := BASE_URL + "/v1/customers" + ID + "/deliveries"
 	req := CreateDeliveryRequest{
 		manifest:              manifest,
 		pickup_name:           pickup_name,

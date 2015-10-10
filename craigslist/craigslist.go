@@ -3,13 +3,14 @@ package craigslist
 import (
 	"errors"
 	"fmt"
-	"net/http"
+	"strconv"
 
 	"appengine"
 	"appengine/urlfetch"
 
-	"github.com/x/net/html/atom"
 	"github.com/yhat/scrape"
+	"golang.org/x/net/html"
+	"golang.org/x/net/html/atom"
 )
 
 type Listing struct {
@@ -23,14 +24,12 @@ func NewListing(ctx appengine.Context, url string) (*Listing, error) {
 	client := urlfetch.Client(ctx)
 	resp, err := client.Get(url)
 	if err != nil {
-		fmt.Printf(w, "Get Error")
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Println("Get Error")
 		return nil, errors.New("Get listing failed")
 	}
 	root, err := html.Parse(resp.Body)
 	if err != nil {
-		fmt.Printf(w, "Parsing Error")
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Println("Parsing Error")
 		return nil, errors.New("Parse body failed")
 	}
 
@@ -44,6 +43,11 @@ func NewListing(ctx appengine.Context, url string) (*Listing, error) {
 		fmt.Println("Error getting price")
 		return nil, errors.New("Get price failed")
 	}
+	intPrice, err := strconv.Atoi(scrape.Text(price))
+	if err != nil {
+		return nil, err
+	}
+
 	area, ok := scrape.Find(title, scrape.ByTag(atom.Small))
 	if !ok {
 		fmt.Println("Error getting area")
@@ -52,8 +56,8 @@ func NewListing(ctx appengine.Context, url string) (*Listing, error) {
 
 	return &Listing{
 		Url:   url,
-		Title: title,
-		Price: price,
-		Area:  area,
+		Title: scrape.Text(title),
+		Price: intPrice,
+		Area:  scrape.Text(area),
 	}, nil
 }
