@@ -1,11 +1,11 @@
 package capitalone
 
 import (
-	"fmt"
-	"net/http"
-
 	"appengine"
 	"appengine/urlfetch"
+	"encoding/json"
+	"fmt"
+	"net/http"
 )
 
 type CreateTransferRequest struct {
@@ -20,5 +20,14 @@ func CreateTransfer(c appengine.Context, payer_id string, payee_id string, amoun
 	c := appengine.NewContext(r)
 	client := urlfetch.Client(c)
 	url := BASE_URL + "/accounts/" + payer_id + "/transfers"
+	req := CreateTransferRequest{
+		medium:   "balance",
+		payee_id: payee_id,
+		amound:   amount,
+	}
+	encoded, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
 	return client.Post(url, "application/json", bytes.NewBuffer(encoded))
 }
