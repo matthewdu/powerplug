@@ -5,7 +5,6 @@ import (
 	"capitalone"
 	"craigslist"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"postmates"
 
@@ -13,15 +12,15 @@ import (
 )
 
 type MainRequest struct {
-	cl_url                  string
-	co_payer_id             string
-	co_payee_id             string
-	pm_pickup_name          string
-	pm_pickup_address       string
-	pm_pickup_phone_number  string
-	pm_dropoff_name         string
-	pm_dropoff_address      string
-	pm_dropoff_phone_number string
+	Cl_url                  string `json:"cl_url"`
+	Co_payer_id             string `json:"co_payer_id"`
+	Co_payee_id             string `json:"co_payee_id"`
+	Pm_pickup_name          string `json:"pm_pickup_name"`
+	Pm_pickup_address       string `json:"pm_pickup_address"`
+	Pm_pickup_phone_number  string `json:"pm_pickup_phone_number"`
+	Pm_dropoff_name         string `json:"pm_dropoff_name"`
+	Pm_dropoff_address      string `json:"pm_dropoff_address"`
+	Pm_dropoff_phone_number string `json:"pm_dropoff_phone_number"`
 }
 
 func init() {
@@ -29,8 +28,7 @@ func init() {
 
 	// mux.Get, Post, etc ... takes http.Handler
 	mux.Post("/get_my_stuff", http.HandlerFunc(RequestHandler))
-
-	http.ListenAndServe(":8080", mux)
+	http.Handle("/", mux)
 }
 
 func RequestHandler(rw http.ResponseWriter, req *http.Request) {
@@ -41,18 +39,19 @@ func RequestHandler(rw http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	listing, err := craigslist.NewListing(c, request.cl_url)
+	listing, err := craigslist.NewListing(c, request.Cl_url)
+	c.Debugf("%s", listing)
 	if err != nil {
 		panic(err)
 	}
-	co_resp, err := capitalone.CreateTransfer(c, request.co_payer_id, request.co_payee_id, listing.Price)
+	co_resp, err := capitalone.CreateTransfer(c, request.Co_payer_id, request.Co_payee_id, listing.Price)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(co_resp)
-	pm_resp, err := postmates.CreateDelivery(c, listing.Title, request.pm_pickup_name, request.pm_pickup_address, request.pm_pickup_phone_number, "Craigslist", "", request.pm_dropoff_name, request.pm_dropoff_address, request.pm_dropoff_phone_number, "Craigslist", "")
+	c.Debugf("%s", co_resp)
+	pm_resp, err := postmates.CreateDelivery(c, listing.Title, request.Pm_pickup_name, request.Pm_pickup_address, request.Pm_pickup_phone_number, "Craigslist", "", request.Pm_dropoff_name, request.Pm_dropoff_address, request.Pm_dropoff_phone_number, "Craigslist", "")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(pm_resp)
+	c.Debugf("%s", pm_resp)
 }

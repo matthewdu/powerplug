@@ -2,7 +2,6 @@ package craigslist
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 
 	"appengine"
@@ -22,25 +21,26 @@ type Listing struct {
 
 func NewListing(ctx appengine.Context, url string) (*Listing, error) {
 	client := urlfetch.Client(ctx)
-	resp, err := client.Get(url)
+	resp, err := client.Get("http://sfbay.craigslist.org")
+	ctx.Errorf("%s", resp.Status)
 	if err != nil {
-		fmt.Println("Get Error")
+		ctx.Errorf("%s", err)
 		return nil, errors.New("Get listing failed")
 	}
 	root, err := html.Parse(resp.Body)
 	if err != nil {
-		fmt.Println("Parsing Error")
+		ctx.Errorf("%s", "Parsing Error")
 		return nil, errors.New("Parse body failed")
 	}
 
 	title, ok := scrape.Find(root, scrape.ByClass("postingtitletext"))
 	if !ok {
-		fmt.Println("Error getting title")
+		ctx.Errorf("%s", "Error getting title")
 		return nil, errors.New("Get title failed")
 	}
 	price, ok := scrape.Find(root, scrape.ByClass("price"))
 	if !ok {
-		fmt.Println("Error getting price")
+		ctx.Errorf("%s", "Error getting price")
 		return nil, errors.New("Get price failed")
 	}
 	intPrice, err := strconv.Atoi(scrape.Text(price))
@@ -50,7 +50,7 @@ func NewListing(ctx appengine.Context, url string) (*Listing, error) {
 
 	area, ok := scrape.Find(title, scrape.ByTag(atom.Small))
 	if !ok {
-		fmt.Println("Error getting area")
+		ctx.Errorf("%s", "Error getting area")
 		return nil, errors.New("Get area failed")
 	}
 

@@ -8,7 +8,7 @@ handlers:
   static_files: \1/\2
   upload: (scripts|styles)/.*
 
-- url: /go_route
+- url: /get_my_stuff
   script: _go_app
 
 - url: /.*
