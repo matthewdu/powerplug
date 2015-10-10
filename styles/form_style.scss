@@ -1,6 +1,23 @@
-$background-color: #420078;
-$text-color: #FF6600;
+$background-color: #000080;
+$text-color: #FFD700;
 
 body {
   margin-top: 40px;
+  background-color: $background-color;
+  color: $text-color;
+  font-family: Verdana, Geneva, sans-serif;
+
+  .jumbotron {
+          background-color: $background-color;
+          border-radius: 0;
+          border: 2px solid $text-color;
+
+          .site-title {
+                  text-align: center;
+
+                  .title {
+                          font-size: 30px;
+                  }
+          }
+  }
 }

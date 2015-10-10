@@ -1,4 +1,15 @@
 body {
-  margin-top: 40px; }
+  margin-top: 40px;
+  background-color: #000080;
+  color: #FFD700;
+  font-family: Verdana, Geneva, sans-serif; }
+  body .jumbotron {
+    background-color: #000080;
+    border-radius: 0;
+    border: 2px solid #FFD700; }
+    body .jumbotron .site-title {
+      text-align: center; }
+      body .jumbotron .site-title .title {
+        font-size: 30px; }
 
 /*# sourceMappingURL=form_style.css.map */
