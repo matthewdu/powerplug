@@ -3,7 +3,7 @@ package powerplug
 import (
 	"appengine"
 	"capitalone"
-	"craigslist"
+	// "craigslist"
 	"encoding/json"
 	"net/http"
 	"postmates"
@@ -39,19 +39,20 @@ func RequestHandler(rw http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	listing, err := craigslist.NewListing(c, request.Cl_url)
-	c.Debugf("%s", listing)
+	// listing, err := craigslist.NewListing(c, request.Cl_url)
+	// c.Debugf("%s", listing)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// co_resp, err := capitalone.CreateTransfer(c, request.Co_payer_id, request.Co_payee_id, listing.Price)
+	co_resp, err := capitalone.CreateTransfer(c, request.Co_payer_id, request.Co_payee_id, 50)
 	if err != nil {
 		panic(err)
 	}
-	co_resp, err := capitalone.CreateTransfer(c, request.Co_payer_id, request.Co_payee_id, listing.Price)
+	c.Debugf("%s", co_resp.Body)
+	pm_resp, err := postmates.CreateDelivery(c, "Gum balls", request.Pm_pickup_name, request.Pm_pickup_address, request.Pm_pickup_phone_number, "Craigslist", "", request.Pm_dropoff_name, request.Pm_dropoff_address, request.Pm_dropoff_phone_number, "Craigslist", "")
 	if err != nil {
 		panic(err)
 	}
-	c.Debugf("%s", co_resp)
-	pm_resp, err := postmates.CreateDelivery(c, listing.Title, request.Pm_pickup_name, request.Pm_pickup_address, request.Pm_pickup_phone_number, "Craigslist", "", request.Pm_dropoff_name, request.Pm_dropoff_address, request.Pm_dropoff_phone_number, "Craigslist", "")
-	if err != nil {
-		panic(err)
-	}
-	c.Debugf("%s", pm_resp)
+	c.Debugf("%s", pm_resp.Body)
 }

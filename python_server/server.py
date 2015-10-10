@@ -1,37 +1,26 @@
-from BaseHTTPServer import BaseHTTPRequestHandler
-import urlparse
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import time
 
-class GetHandler(BaseHTTPRequestHandler):
+hostName = "localhost"
+hostPort = 2138
+
+class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
-        parsed_path = urlparse.urlparse(self.path)
-        message_parts = [
-                'CLIENT VALUES:',
-                'client_address=%s (%s)' % (self.client_address,
-                                            self.address_string()),
-                'command=%s' % self.command,
-                'path=%s' % self.path,
-                'real path=%s' % parsed_path.path,
-                'query=%s' % parsed_path.query,
-                'request_version=%s' % self.request_version,
-                '',
-                'SERVER VALUES:',
-                'server_version=%s' % self.server_version,
-                'sys_version=%s' % self.sys_version,
-                'protocol_version=%s' % self.protocol_version,
-                '',
-                'HEADERS RECEIVED:',
-                ]
-        for name, value in sorted(self.headers.items()):
-            message_parts.append('%s=%s' % (name, value.rstrip()))
-        message_parts.append('')
-        message = '\r\n'.join(message_parts)
         self.send_response(200)
+        self.send_header("Content-type", "text/html")
         self.end_headers()
-        self.wfile.write(message)
-        return
+        self.wfile.write(bytes("<html><head><title>Title goes here.</title></head>", "utf-8"))
+        self.wfile.write(bytes("<body><p>This is a test.</p>", "utf-8"))
+        self.wfile.write(bytes("<p>You accessed path: %s</p>" % self.path, "utf-8"))
+        self.wfile.write(bytes("</body></html>", "utf-8"))
 
-if __name__ == '__main__':
-    from BaseHTTPServer import HTTPServer
-    server = HTTPServer(('localhost', 8080), GetHandler)
-    print 'Starting server, use <Ctrl-C> to stop'
-    server.serve_forever()
+myServer = HTTPServer((hostName, hostPort), MyServer)
+print(time.asctime(), "Server Starts - %s:%s" % (hostName, hostPort))
+
+try:
+    myServer.serve_forever()
+except KeyboardInterrupt:
+    pass
+
+myServer.server_close()
+print(time.asctime(), "Server Stops - %s:%s" % (hostName, hostPort))
