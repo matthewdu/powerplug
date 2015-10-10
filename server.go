@@ -1,57 +1,133 @@
 package powerplug
 
 import (
-	"appengine"
 	"capitalone"
 	"craigslist"
 	"encoding/json"
+	"fmt"
+	"html/template"
 	"net/http"
 	"postmates"
+
+	"appengine"
+	"appengine/datastore"
+	"appengine/mail"
 
 	"github.com/go-zoo/bone"
 )
 
 type MainRequest struct {
-	Cl_url                  string `json:"cl_url"`
-	Co_payer_id             string `json:"co_payer_id"`
-	Co_payee_id             string `json:"co_payee_id"`
-	Pm_pickup_name          string `json:"pm_pickup_name"`
-	Pm_pickup_address       string `json:"pm_pickup_address"`
-	Pm_pickup_phone_number  string `json:"pm_pickup_phone_number"`
-	Pm_dropoff_name         string `json:"pm_dropoff_name"`
-	Pm_dropoff_address      string `json:"pm_dropoff_address"`
-	Pm_dropoff_phone_number string `json:"pm_dropoff_phone_number"`
+	Cl_url                  string `json:"cl_url" datastore:"craigslist_url"`
+	Cl_title                string `json:"-" datastore:"craigslist_title"`
+	Cl_price                int    `json:"-" datastore:"craigslist_price"`
+	Cl_email                string `json:"cl_email" datastore:"craigslist_email"`
+	Co_payer_id             string `json:"co_payer_id" datastore:"capital_one_payer_id"`
+	Co_payee_id             string `json:"co_payee_id" datastore:"capital_one_payee_id"`
+	Pm_dropoff_name         string `json:"pm_dropoff_name datastore:"postmates_dropoff_name"`
+	Pm_dropoff_address      string `json:"pm_dropoff_address" datastore:"postmates_dropoff_address"`
+	Pm_dropoff_phone_number string `json:"pm_dropoff_phone_number" datastore:"postmates_dropoff_phone_number"`
+	Pm_pickup_name          string `json:"pm_pickup_name" datastore:"postmates_pickup_name"`
+	Pm_pickup_address       string `json:"pm_pickup_address" datastore:"postmates_pickup_address"`
+	Pm_pickup_phone_number  string `json:"pm_pickup_phone_number" datastore:"postmates_pickup_phone_number"`
 }
 
 func init() {
 	mux := bone.New()
 
-	// mux.Get, Post, etc ... takes http.Handler
-	mux.Post("/get_my_stuff", http.HandlerFunc(RequestHandler))
+	mux.PostFunc("/buy_request", BuyRequestHandler)
+	mux.GetFunc("/request/:key", RequestHandler)
+	mux.PostFunc("/accept_request/:key", AcceptRequestHandler)
 	http.Handle("/", mux)
 }
 
-func RequestHandler(rw http.ResponseWriter, req *http.Request) {
-	c := appengine.NewContext(req)
-	decoder := json.NewDecoder(req.Body)
+func createConfirmationURL(key *datastore.Key) string {
+	return "http://localhost:8080/request/" + key.Encode()
+}
+
+func BuyRequestHandler(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
+	decoder := json.NewDecoder(r.Body)
 	var request MainRequest
 	err := decoder.Decode(&request)
 	if err != nil {
-		panic(err)
+		c.Errorf("Error decoding main request json")
 	}
 	listing, err := craigslist.NewListing(c, request.Cl_url)
 	if err != nil {
-		panic(err)
+		c.Errorf("%s", err)
 	}
-	// co_resp, err := capitalone.CreateTransfer(c, request.Co_payer_id, request.Co_payee_id, listing.Price)
-	co_resp, err := capitalone.CreateTransfer(c, request.Co_payer_id, request.Co_payee_id, listing.Price)
+	request.Cl_title = listing.Title
+	request.Cl_price = listing.Price
+
+	confirmMessage := "%s is interested in purchasing your %s. Please follow the link to accept the purchase:\n%s"
+
+	key, err := datastore.Put(c, datastore.NewIncompleteKey(c, "request", nil), request)
 	if err != nil {
-		panic(err)
+		c.Errorf("Error putting purchase request into database: %s", err)
+	}
+	url := createConfirmationURL(key)
+	msg := &mail.Message{
+		Sender:  "powerplug <support@example.com>",
+		To:      []string{request.Cl_email},
+		Subject: "Purchase Request for \"" + listing.Title + "\"",
+		Body:    fmt.Sprintf(confirmMessage, request.Pm_dropoff_name, listing.Title, url),
+	}
+	if err := mail.Send(c, msg); err != nil {
+		c.Errorf("Couldn't send email: %v", err)
+	}
+}
+
+func RequestHandler(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
+	keyString := bone.GetValue(r, "key")
+	decodedKey, err := datastore.DecodeKey(keyString)
+	if err != nil {
+		c.Errorf("Error decoding key %s", err)
+	}
+	var purchase_request MainRequest
+	if err = datastore.Get(c, decodedKey, &purchase_request); err != nil {
+		c.Errorf("Error retrieving request key from database", err)
+	}
+
+	// render the template
+	request_template, err := template.ParseFiles("request.html")
+	if err != nil {
+		c.Errorf("Error parsing template %s", err)
+	}
+	request_template.Execute(w, "request")
+}
+
+func AcceptRequestHandler(w http.ResponseWriter, r *http.Request) {
+	keyId := bone.GetValue(r, "key")
+	c := appengine.NewContext(r)
+	key, err := datastore.DecodeKey(keyId)
+	var dbRequest MainRequest
+	if err = datastore.Get(c, key, &dbRequest); err != nil {
+		c.Errorf("%s", err)
+	}
+
+	decoder := json.NewDecoder(r.Body)
+	var request MainRequest
+	if err := decoder.Decode(&request); err != nil {
+		c.Errorf("%s", err)
+	}
+
+	dbRequest.Co_payee_id = request.Co_payee_id
+	dbRequest.Pm_pickup_name = request.Pm_pickup_name
+	dbRequest.Pm_pickup_address = request.Pm_pickup_address
+	dbRequest.Pm_pickup_phone_number = request.Pm_pickup_phone_number
+
+	co_resp, err := capitalone.CreateTransfer(c, dbRequest.Co_payer_id, dbRequest.Co_payee_id, dbRequest.Cl_price)
+	if err != nil {
+		c.Errorf("%s", err)
 	}
 	c.Debugf("%s", co_resp.Body)
-	pm_resp, err := postmates.CreateDelivery(c, listing.Title, request.Pm_pickup_name, request.Pm_pickup_address, request.Pm_pickup_phone_number, "Craigslist", "", request.Pm_dropoff_name, request.Pm_dropoff_address, request.Pm_dropoff_phone_number, "Craigslist", "")
+	pm_resp, err := postmates.CreateDelivery(c, dbRequest.Cl_title, dbRequest.Pm_pickup_name, dbRequest.Pm_pickup_address, dbRequest.Pm_pickup_phone_number, "Craigslist", "", dbRequest.Pm_dropoff_name, dbRequest.Pm_dropoff_address, dbRequest.Pm_dropoff_phone_number, "Craigslist", "")
 	if err != nil {
-		panic(err)
+		c.Errorf("%s", err)
 	}
 	c.Debugf("%s", pm_resp.Body)
+	if _, err := datastore.Put(c, key, &dbRequest); err != nil {
+		c.Errorf("%s", err)
+	}
 }

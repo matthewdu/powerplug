@@ -21,6 +21,9 @@ type Listing struct {
 func NewListing(ctx appengine.Context, url string) (*Listing, error) {
 	client := urlfetch.Client(ctx)
 	resp, err := client.Get("http://167.88.16.61:2138/" + url)
+	if err != nil {
+		ctx.Errorf("%s", err)
+	}
 	ctx.Debugf("Craigslist request came back with status: %s", resp.Status)
 	if err != nil {
 		ctx.Errorf("%s", err)

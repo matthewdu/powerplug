@@ -8,7 +8,7 @@ handlers:
   static_files: \1/\2
   upload: (scripts|styles)/.*
 
-- url: /get_my_stuff
+- url: /buy_request
   script: _go_app
 
 - url: /.*
