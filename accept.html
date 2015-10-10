@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset=utf-8 />
+        <title>Craig's Automation</title>
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="/scripts/form_submission.js"></script>
+        <link rel="stylesheet" type="text/css" href="styles/form_style.css">
+    </head>
+    <body>
+        <form id="sellerform infoform" action="/accept_request" method="post">
+            <div>Payee ID: <input type="text" name="co_payee_id"></input></div>
+            <div>Pickup Name: <input type="text" name="pm_pickup_name"></input></div>
+            <div>Pickup Address: <input type="text" name="pm_pickup_address"></input></div>
+            <div>Pickup Phone Number: <input type="text" name="pm_pickup_phone_number"></input></div>
+            <div><input type="submit" value="Make the sale!"></input></div>
+        </form>
+    </body>
+</html>
+

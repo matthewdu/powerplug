@@ -7,15 +7,9 @@ $(document).ready(function() {
 				inputs[this["name"]] = this.value;
 			}
 		});
-		// get cl page
-		$.ajax({
-			url: inputs.cl_url,
-			dataType: 'jsonp',
-			success: function(dataWeGotViaJsonp){
-				console.log(dataWeGotViaJsonp);
-			}
-		});
 		// make call
+		$.post("http://localhost:8080/get_my_stuff", JSON.stringify(inputs))
+		// prevent default formdata post
 		event.preventDefault();
 	});
 });
