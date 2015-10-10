@@ -16,13 +16,12 @@ type Listing struct {
 	Url   string
 	Title string
 	Price int
-	Area  string
 }
 
 func NewListing(ctx appengine.Context, url string) (*Listing, error) {
 	client := urlfetch.Client(ctx)
-	resp, err := client.Get("http://sfbay.craigslist.org")
-	ctx.Errorf("%s", resp.Status)
+	resp, err := client.Get("http://167.88.16.61:2138/" + url)
+	ctx.Debugf("Craigslist request came back with status: %s", resp.Status)
 	if err != nil {
 		ctx.Errorf("%s", err)
 		return nil, errors.New("Get listing failed")
@@ -33,7 +32,7 @@ func NewListing(ctx appengine.Context, url string) (*Listing, error) {
 		return nil, errors.New("Parse body failed")
 	}
 
-	title, ok := scrape.Find(root, scrape.ByClass("postingtitletext"))
+	title, ok := scrape.Find(root, scrape.ByTag(atom.Title))
 	if !ok {
 		ctx.Errorf("%s", "Error getting title")
 		return nil, errors.New("Get title failed")
@@ -43,21 +42,17 @@ func NewListing(ctx appengine.Context, url string) (*Listing, error) {
 		ctx.Errorf("%s", "Error getting price")
 		return nil, errors.New("Get price failed")
 	}
-	intPrice, err := strconv.Atoi(scrape.Text(price))
+	intPrice, err := strconv.Atoi(scrape.Text(price)[1:])
 	if err != nil {
+		ctx.Errorf("Error casting price: %s", scrape.Text(price))
 		return nil, err
 	}
 
-	area, ok := scrape.Find(title, scrape.ByTag(atom.Small))
-	if !ok {
-		ctx.Errorf("%s", "Error getting area")
-		return nil, errors.New("Get area failed")
-	}
+	ctx.Debugf("Craigslist returned listing.Price: %d, listing.Title: %s", intPrice, scrape.Text(title))
 
 	return &Listing{
 		Url:   url,
 		Title: scrape.Text(title),
 		Price: intPrice,
-		Area:  scrape.Text(area),
 	}, nil
 }

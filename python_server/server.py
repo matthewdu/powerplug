@@ -1,26 +1,15 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import time
+#!/usr/bin/env python
+import SimpleHTTPServer
+import SocketServer
+import urllib2
 
-hostName = "localhost"
-hostPort = 2138
-
-class MyServer(BaseHTTPRequestHandler):
+class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_GET(self):
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
-        self.wfile.write(bytes("<html><head><title>Title goes here.</title></head>", "utf-8"))
-        self.wfile.write(bytes("<body><p>This is a test.</p>", "utf-8"))
-        self.wfile.write(bytes("<p>You accessed path: %s</p>" % self.path, "utf-8"))
-        self.wfile.write(bytes("</body></html>", "utf-8"))
+        cl_url = self.path[1:]
+        contents = urllib2.urlopen(cl_url).read()
+        self.wfile.write(contents)
 
-myServer = HTTPServer((hostName, hostPort), MyServer)
-print(time.asctime(), "Server Starts - %s:%s" % (hostName, hostPort))
+Handler = MyRequestHandler
+server = SocketServer.TCPServer(('', 2138), Handler)
 
-try:
-    myServer.serve_forever()
-except KeyboardInterrupt:
-    pass
-
-myServer.server_close()
-print(time.asctime(), "Server Stops - %s:%s" % (hostName, hostPort))
+server.serve_forever()
