@@ -1,15 +1,69 @@
 body {
   margin-top: 40px;
-  background-color: #000080;
-  color: #FFD700;
+  background-color: #F8F8F8;
+  color: #585858;
   font-family: Verdana, Geneva, sans-serif; }
-  body .jumbotron {
-    background-color: #000080;
+  body .container .jumbotron {
+    background-color: #F8F8F8;
     border-radius: 0;
-    border: 2px solid #FFD700; }
-    body .jumbotron .site-title {
+    border: none;
+    height: 628px; }
+    body .container .jumbotron #form-content.gone {
+      display: none; }
+    body .container .jumbotron #form-content .site-title {
       text-align: center; }
-      body .jumbotron .site-title .title {
+      body .container .jumbotron #form-content .site-title .title {
+        margin: 0 0 20px;
         font-size: 30px; }
+      body .container .jumbotron #form-content .site-title .description {
+        text-indent: 30px;
+        margin: 20px 0;
+        text-align: left; }
+    body .container .jumbotron #form-content .form-group {
+      line-height: 34px; }
+      body .container .jumbotron #form-content .form-group label {
+        margin-bottom: 0; }
+      body .container .jumbotron #form-content .form-group input[type="text"] {
+        width: 70%;
+        float: right;
+        background-color: transparent;
+        border-radius: 0;
+        box-shadow: none;
+        color: #585858;
+        border-color: #E8E8E8; }
+        body .container .jumbotron #form-content .form-group input[type="text"]:hover, body .container .jumbotron #form-content .form-group input[type="text"]:active, body .container .jumbotron #form-content .form-group input[type="text"]:focus {
+          background-color: #E8E8E8; }
+      body .container .jumbotron #form-content .form-group.button-group {
+        width: 100%; }
+        body .container .jumbotron #form-content .form-group.button-group .submit-button {
+          width: 100%;
+          background-color: transparent;
+          border-radius: 0;
+          color: #585858;
+          border-color: #585858;
+          margin-top: 20px; }
+          body .container .jumbotron #form-content .form-group.button-group .submit-button:hover {
+            background-color: #E8E8E8;
+            transition: background-color .25s ease-in-out;
+            -moz-transition: background-color .25s ease-in-out;
+            -webkit-transition: background-color .25s ease-in-out; }
+    body .container .jumbotron #been-sent-content {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: center;
+      align-items: center; }
+      body .container .jumbotron #been-sent-content.none {
+        display: none; }
+      body .container .jumbotron #been-sent-content.gone {
+        opacity: 0;
+        translation: 50px; }
+      body .container .jumbotron #been-sent-content .envelope {
+        font-size: 100px;
+        margin-bottom: 30px; }
+      body .container .jumbotron #been-sent-content .thanks-message {
+        font-weight: 300;
+        font-size: 18px;
+        margin-top: 30px; }
 
 /*# sourceMappingURL=form_style.css.map */
