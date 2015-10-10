@@ -23,7 +23,7 @@ type MainRequest struct {
 	Cl_email                string `json:"cl_email" datastore:"craigslist_email"`
 	Co_payer_id             string `json:"co_payer_id" datastore:"capital_one_payer_id"`
 	Co_payee_id             string `json:"co_payee_id" datastore:"capital_one_payee_id"`
-	Pm_dropoff_name         string `json:"pm_dropoff_name datastore:"postmates_dropoff_name"`
+	Pm_dropoff_name         string `json:"pm_dropoff_name" datastore:"postmates_dropoff_name"`
 	Pm_dropoff_address      string `json:"pm_dropoff_address" datastore:"postmates_dropoff_address"`
 	Pm_dropoff_phone_number string `json:"pm_dropoff_phone_number" datastore:"postmates_dropoff_phone_number"`
 	Pm_pickup_name          string `json:"pm_pickup_name" datastore:"postmates_pickup_name"`
@@ -40,8 +40,11 @@ func init() {
 	http.Handle("/", mux)
 }
 
-func createConfirmationURL(key *datastore.Key) string {
-	return "http://localhost:8080/request/" + key.Encode()
+func createConfirmationURL(c appengine.Context, key *datastore.Key) string {
+	if appengine.IsDevAppServer() {
+		return "http://localhost:8080/request/" + key.Encode()
+	}
+	return "http://" + appengine.AppID(c) + ".appspot.com/request/" + key.Encode()
 }
 
 func BuyRequestHandler(w http.ResponseWriter, r *http.Request) {
@@ -61,17 +64,18 @@ func BuyRequestHandler(w http.ResponseWriter, r *http.Request) {
 
 	confirmMessage := "%s is interested in purchasing your %s. Please follow the link to accept the purchase:\n%s"
 
-	key, err := datastore.Put(c, datastore.NewIncompleteKey(c, "request", nil), request)
+	key, err := datastore.Put(c, datastore.NewIncompleteKey(c, "request", nil), &request)
 	if err != nil {
 		c.Errorf("Error putting purchase request into database: %s", err)
 	}
-	url := createConfirmationURL(key)
+	url := createConfirmationURL(c, key)
 	msg := &mail.Message{
-		Sender:  "powerplug <support@example.com>",
+		Sender:  "craigomation <craigomation@appspot.gserviceaccount.com>",
 		To:      []string{request.Cl_email},
 		Subject: "Purchase Request for \"" + listing.Title + "\"",
 		Body:    fmt.Sprintf(confirmMessage, request.Pm_dropoff_name, listing.Title, url),
 	}
+	c.Debugf("Email body: %s", msg.Body)
 	if err := mail.Send(c, msg); err != nil {
 		c.Errorf("Couldn't send email: %v", err)
 	}
@@ -94,7 +98,7 @@ func RequestHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		c.Errorf("Error parsing template %s", err)
 	}
-	request_template.Execute(w, "request")
+	request_template.ExecuteTemplate(w, "request", purchase_request)
 }
 
 func AcceptRequestHandler(w http.ResponseWriter, r *http.Request) {

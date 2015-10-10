@@ -1,4 +1,4 @@
-application: powerplug
+application: craigomation
 version: alpha-001
 runtime: go
 api_version: go1
@@ -9,6 +9,12 @@ handlers:
   upload: (scripts|styles)/.*
 
 - url: /buy_request
+  script: _go_app
+
+- url: /request/(.*)
+  script: _go_app
+
+- url: /accept_request/(.*)
   script: _go_app
 
 - url: /.*

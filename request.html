@@ -1,0 +1,31 @@
+{{define "request"}}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset=utf-8 />
+        <title>Craig's Automation</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="/styles/form_style.css">
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="/scripts/form_submission.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="jumbotron" style="background-color: #DAB7F7;">
+                    <h1>Confirm the request</h1>
+                    <form id="accept_request_form" action="accept_request" method="post">
+                        <div class="form-group"><label>Craigslist URL: </label><input class="form-control" type="text" name="cl_url" value="{{.Cl_url}}" readonly></input></div>
+                        <div class="form-group"><label>Capital One ID: </label><input class="form-control" type="text" name="co_payee_id"></input></div>
+                        <div class="form-group"><label>Name: </label><input class="form-control" type="text" name="pm_pickup_name"></input></div>
+                        <div class="form-group"><label>Pickup Address: </label><input class="form-control" type="text" name="pm_pickup_address"></input></div>
+                        <div class="form-group"><label>Phone Number: </label><input class="form-control" type="text" name="pm_pickup_phone_number"></input></div>
+                        <div class="form-group"><input class="btn btn-primary btn-lg" type="submit" value="Confirm sale!"></input></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+{{end}}
