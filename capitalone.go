@@ -17,7 +17,6 @@ type CreateTransferRequest struct {
 const BASE_URL string = "http://api.reimaginebanking.com/"
 
 func CreateTransfer(c appengine.Context, payer_id string, payee_id string, amount int) (*http.Response, error) {
-	c := appengine.NewContext(r)
 	client := urlfetch.Client(c)
 	url := BASE_URL + "/accounts/" + payer_id + "/transfers"
 	req := CreateTransferRequest{

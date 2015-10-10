@@ -1,43 +1,53 @@
 package powerplug
 
 import (
+	"capitalone"
+	"craigslist"
 	"fmt"
-	"net/http"
-
 	"go-zoo/bone"
+	"net/http"
+	"postmates"
 )
 
-func init() {
-	http.HandleFunc("/", handler)
+type MainRequest struct {
+	cl_url                  string
+	co_payer_id             string
+	co_payee_id             string
+	pm_pickup_name          string
+	pm_pickup_address       string
+	pm_pickup_phone_number  string
+	pm_dropoff_name         string
+	pm_dropoff_address      string
+	pm_dropoff_phone_number string
 }
 
 func init() {
 	mux := bone.New()
 
 	// mux.Get, Post, etc ... takes http.Handler
-	mux.Get("/home/:id", http.HandlerFunc(HomeHandler))
-	mux.Get("/profil/:id/:var", http.HandlerFunc(ProfilHandler))
-	mux.Post("/data", http.HandlerFunc(DataHandler))
-
-	// Support REGEX Route params
-	mux.Get("/index/#id^[0-9]$", http.HandleFunc(IndexHandler))
-
-	// Handle take http.Handler
-	mux.Handle("/", http.HandlerFunc(RootHandler))
-
-	// GetFunc, PostFunc etc ... takes http.HandlerFunc
-	mux.GetFunc("/test", Handler)
+	mux.Post("/get_my_stuff", http.HandlerFunc(RequestHandler))
 
 	http.ListenAndServe(":8080", mux)
 }
 
-func Handler(rw http.ResponseWriter, req *http.Request) {
-	// Get the value of the "id" parameters.
-	val := bone.GetValue(req, "id")
-
-	rw.Write([]byte(val))
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello, world!")
+func RequestHandler(rw http.ResponseWriter, req *http.Request) {
+	c := appengine.NewContext(req)
+	decoder := json.NewDecoder(req.Body)
+	var request MainRequest
+	err := decoder.Decode(&request)
+	if err != nil {
+		panic()
+	}
+	listing, err := craigslist.NewListing(c, request.cl_url)
+	if err != nil {
+		panic()
+	}
+	co_resp, err := capitalone.CreateTransfer(request.co_payer_id, request.co_payee_id, amount)
+	if err != nil {
+		panic()
+	}
+	pm_resp, err := postmates.CreateDelivery(c, title, request.pm_pickup_name, request.pm_pickup_address, request.pm_pickup_phone_number, "Craigslist", "", request.pm_dropoff_name, request.pm_dropoff_address, request.pm_dropoff_phone_number, "Craigslist", "")
+	if err != nil {
+		panic()
+	}
 }

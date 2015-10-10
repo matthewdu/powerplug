@@ -24,7 +24,6 @@ type CreateDeliveryRequest struct {
 const BASE_URL string = "https://api.postmates.com/"
 
 func CreateDelivery(c appengine.Context, manifest string, pickup_name string, pickup_address string, pickup_phone_number string, pickup_business_name string, pickup_notes string, dropoff_name string, dropoff_address string, dropoff_phone_number string, dropoff_business_name string, dropoff_notes string) (*http.Response, error) {
-	c := appengine.NewContext(r)
 	client := urlfetch.Client(c)
 	url := BASE_URL + "/accounts/" + payer_id + "/transfers"
 	req := CreateDeliveryRequest{
