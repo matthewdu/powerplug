@@ -1,6 +1,10 @@
 $background-color: #FCFCFC;
 $text-color: #585858;
 
+* {
+        position: relative
+}
+
 html {
         position: relative;
         height: 100%;
@@ -13,6 +17,7 @@ html {
 .hide {
         display: none;
 }
+
 
 body {
         position: relative;
@@ -102,6 +107,12 @@ body {
                                                                 -webkit-transition: background-color .25s ease-in-out;
                                                         }
                                                 }
+                                        }
+                                        span.checkmark {
+                                                position: absolute;
+                                                top: 30%;
+                                                right: 2%;
+                                                color: #85C985;
                                         }
                                 }
                         }

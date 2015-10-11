@@ -1,3 +1,6 @@
+* {
+  position: relative; }
+
 html {
   position: relative;
   height: 100%;
@@ -71,6 +74,11 @@ body {
             transition: background-color .25s ease-in-out;
             -moz-transition: background-color .25s ease-in-out;
             -webkit-transition: background-color .25s ease-in-out; }
+      body .container .jumbotron #form-content .form-group span.checkmark {
+        position: absolute;
+        top: 30%;
+        right: 2%;
+        color: #85C985; }
     body .container .jumbotron #been-sent-content {
       display: flex;
       flex-direction: column;

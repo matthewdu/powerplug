@@ -4,12 +4,12 @@
         <meta charset=utf-8 />
         <title>Craig's Automation</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="/styles/form_style.css">
         <link href='https://fonts.googleapis.com/css?family=Open+Sans|Oswald' rel='stylesheet' type='text/css'>
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="/scripts/form_submission.js"></script>
         <script src="/scripts/map.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/styles/form_style.css">
     </head>
     <body>
         <div class="container">
@@ -23,20 +23,46 @@
                             </div>
                         </div>
                         <form id="buy_request_form" action="buy_request" method="post">
-                            <div class="form-group"><label>Craigslist URL: </label><input class="form-control" type="text" name="cl_url"></input></div>
+                            <div class="form-group">
+                                <label>Craigslist URL: </label>
+                                <input class="form-control" type="text" name="cl_url"></input>
+                                <span class="glyphicon glyphicon-ok checkmark hide"></span>
+                            </div>
                             <div id="cl_details_container">
                                 <div>Item: <span id="cl_title"></span></div>
                                 <div>Price: <span id="cl_price"></span></div>
                             </div>
-                            <div class="form-group"><label>Poster's Email: </label><input class="form-control" type="text" name="cl_email"></input></div>
-                            <div class="form-group"><label>Capital One ID: </label><input class="form-control" type="text" name="co_payer_id"></input></div>
-                            <div class="form-group"><label>Your Name: </label><input class="form-control" type="text" name="pm_dropoff_name"></input></div>
-                            <div class="form-group"><label>Delivery Address: </label><input id="pac-input" class="form-control" type="text" name="pm_dropoff_address" placeholder=""></input></div>
-                            <div class="form-group"><label>Phone Number: </label><input class="form-control" type="text" name="pm_dropoff_phone_number"></input></div>
-                            <div class="form-group button-group"><input class="btn btn-primary btn-lg submit-button" type="submit" value="Send Request!"></input></div>
+                            <div class="form-group">
+                                <label>Poster's Email: </label>
+                                <input class="form-control" type="text" name="cl_email"></input>
+                                <span class="glyphicon glyphicon-ok checkmark hide"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Capital One ID: </label>
+                                <input class="form-control" type="text" name="co_payer_id"></input>
+                                <span class="glyphicon glyphicon-ok checkmark hide"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Your Name: </label>
+                                <input class="form-control" type="text" name="pm_dropoff_name"></input>
+                                <span class="glyphicon glyphicon-ok checkmark hide"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Delivery Address: </label>
+                                <input id="pac-input" class="form-control" type="text" name="pm_dropoff_address" placeholder=""></input>
+                                <span class="glyphicon glyphicon-ok checkmark hide"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number: </label>
+                                <input class="form-control" type="text" name="pm_dropoff_phone_number"></input>
+                                <span class="glyphicon glyphicon-ok checkmark hide"></span>
+                            </div>
+                            <div class="form-group button-group">
+                                <input class="btn btn-primary btn-lg submit-button" type="submit" value="Send Request!"></input>
+                            </div>
                         </form>
                     </div>
-                    <div id="been-sent-content" class="none gone">
+                    <div id="been-sent-content" class="none hide">
                         <span class="glyphicon glyphicon-envelope envelope" aria-hidden="true"></span>
                         <div class="thanks-message">
                             Thanks for requesting! We'll be in touch when the seller responds

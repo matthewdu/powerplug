@@ -43,6 +43,49 @@ $(document).ready(function() {
 			update_cl(price, title);
 		});
 	});
+
+	// Craigslist url
+	$('input[name=cl_url]').on('keyup', function() {
+		if(this.value.indexOf("craigslist.org") > -1) {
+			$(this).siblings('span').removeClass('hide');
+		} else {
+			$(this).siblings('span').addClass('hide');
+		}
+	});
+	// Email
+	$('input[name=cl_email]').on('keyup', function() {
+		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		if(regex.test(this.value)) {
+			$(this).siblings('span').removeClass('hide');
+		} else {
+			$(this).siblings('span').addClass('hide');
+		}
+	});
+	// Capital one payer id
+	$('input[name=co_payer_id]').on('keyup', function() {
+		if(this.value.length === 24) {
+			$(this).siblings('span').removeClass('hide');
+		} else {
+			$(this).siblings('span').addClass('hide');
+		}
+	});
+	// payer name
+	$('input[name=pm_dropoff_name]').on('keyup', function() {
+		if(this.value.length > 0) {
+			$(this).siblings('span').removeClass('hide');
+		} else {
+			$(this).siblings('span').addClass('hide');
+		}
+	});
+	// phone number
+	$('input[name=pm_dropoff_phone_number]').on('keyup', function() {
+		if(this.value.length >= 10) {
+			$(this).siblings('span').removeClass('hide');
+		} else {
+			$(this).siblings('span').addClass('hide');
+		}
+	});
+
 	$("#buy_request_form").submit(function(event) {
 		var inputs = {};
 		$("input[type=text]").each(function(){
