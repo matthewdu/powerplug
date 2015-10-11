@@ -1,11 +1,28 @@
 $background-color: #F8F8F8;
 $text-color: #585858;
 
+html {
+        position: relative;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+}
+#map {
+        height: 100%;
+}
+.hide {
+        display: none;
+}
+
 body {
-        margin-top: 40px;
+        position: relative;
+        height: 100%;
+        margin: 40px, 0px, 0px, 0px;
+        padding: 0;
+        
         background-color: $background-color;
         color: $text-color;
-        font-family: Verdana, Geneva, sans-serif;
+        font-family: 'Open Sans', Verdana, Geneva, sans-serif;
 
         .container {
                 .jumbotron {
@@ -23,14 +40,16 @@ body {
                                         text-align: center;
 
                                         .title {
+                                                font-family: 'Oswald';
                                                 margin: 0 0 20px;
-                                                font-size: 30px;
+                                                font-size: 80px;
                                         }
 
                                         .description {
                                                 text-indent: 30px;
                                                 margin: 20px 0;
                                                 text-align: left;
+                                                font-size: 16px;
                                         }
                                 }
 

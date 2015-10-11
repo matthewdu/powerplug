@@ -5,21 +5,11 @@
         <title>Craig's Automation</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="/styles/form_style.css">
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans|Oswald' rel='stylesheet' type='text/css'>
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="/scripts/form_submission.js"></script>
+        <script src="/scripts/map.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-        <style>
-            html, body {
-                position: relative;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-            #map {
-                height: 100%;
-            }
-        </style>
-
     </head>
     <body>
         <div class="container">
@@ -37,7 +27,7 @@
                             <div class="form-group"><label>Poster's Email: </label><input class="form-control" type="text" name="cl_email"></input></div>
                             <div class="form-group"><label>Capital One ID: </label><input class="form-control" type="text" name="co_payer_id"></input></div>
                             <div class="form-group"><label>Your Name: </label><input class="form-control" type="text" name="pm_dropoff_name"></input></div>
-                            <div class="form-group"><label>Delivery Address: </label><input class="form-control" type="text" name="pm_dropoff_address"></input></div>
+                            <div class="form-group"><label>Delivery Address: </label><input id="pac-input" class="form-control" type="text" name="pm_dropoff_address"></input></div>
                             <div class="form-group"><label>Phone Number: </label><input class="form-control" type="text" name="pm_dropoff_phone_number"></input></div>
                             <div class="form-group button-group"><input class="btn btn-primary btn-lg submit-button" type="submit" value="Send Request!"></input></div>
                         </form>
@@ -48,7 +38,7 @@
                             Thanks for requesting! We'll be in touch when the seller responds
                         </div>
                     </div>
-                    <div style="height: 480px; width: 720px;">
+                    <div id="mapDiv" class="hide" style="height: 480px; width: 100%;">
                         <div id="map"></div>
                     </div>
                 </div>
@@ -56,62 +46,7 @@
         </div>
 
         <script>
-            function initMap() {
-            var map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: -33.8688, lng: 151.2195},
-                zoom: 13
-            });
-            var input = (document.getElementById('pac-input'));
-
-            var autocomplete = new google.maps.places.Autocomplete(input);
-            autocomplete.bindTo('bounds', map);
-
-            var infowindow = new google.maps.InfoWindow();
-            var marker = new google.maps.Marker({
-                map: map,
-                anchorPoint: new google.maps.Point(0, -29)
-            });
-
-            autocomplete.addListener('place_changed', function() {
-                infowindow.close();
-                marker.setVisible(false);
-                var place = autocomplete.getPlace();
-                if (!place.geometry) {
-                    window.alert("Autocomplete's returned place contains no geometry");
-                    return;
-                }
-
-                // If the place has a geometry, then present it on a map.
-                if (place.geometry.viewport) {
-                    map.fitBounds(place.geometry.viewport);
-                } else {
-                    map.setCenter(place.geometry.location);
-                    map.setZoom(17);  // Why 17? Because it looks good.
-                }
-                marker.setIcon(({
-                    url: place.icon,
-                    size: new google.maps.Size(71, 71),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(17, 34),
-                    scaledSize: new google.maps.Size(35, 35)
-                }));
-                marker.setPosition(place.geometry.location);
-                marker.setVisible(true);
-
-                var address = '';
-                if (place.address_components) {
-                    address = [
-                        (place.address_components[0] && place.address_components[0].short_name || ''),
-                        (place.address_components[1] && place.address_components[1].short_name || ''),
-                        (place.address_components[2] && place.address_components[2].short_name || '')
-                    ].join(' ');
-                }
-
-                infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-                infowindow.open(map, marker);
-            });
-            autocomplete.setTypes([]);
-        }
+            
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqmP49hp2A3dyZYglwn5ho-RYpb69IRiI&signed_in=true&libraries=places&callback=initMap"
         async defer></script>

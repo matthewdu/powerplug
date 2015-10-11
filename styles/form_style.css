@@ -1,8 +1,23 @@
+html {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  padding: 0; }
+
+#map {
+  height: 100%; }
+
+.hide {
+  display: none; }
+
 body {
-  margin-top: 40px;
+  position: relative;
+  height: 100%;
+  margin: 40px, 0px, 0px, 0px;
+  padding: 0;
   background-color: #F8F8F8;
   color: #585858;
-  font-family: Verdana, Geneva, sans-serif; }
+  font-family: 'Open Sans', Verdana, Geneva, sans-serif; }
   body .container .jumbotron {
     background-color: #F8F8F8;
     border-radius: 0;
@@ -13,12 +28,14 @@ body {
     body .container .jumbotron #form-content .site-title {
       text-align: center; }
       body .container .jumbotron #form-content .site-title .title {
+        font-family: 'Oswald';
         margin: 0 0 20px;
-        font-size: 30px; }
+        font-size: 80px; }
       body .container .jumbotron #form-content .site-title .description {
         text-indent: 30px;
         margin: 20px 0;
-        text-align: left; }
+        text-align: left;
+        font-size: 16px; }
     body .container .jumbotron #form-content .form-group {
       line-height: 34px; }
       body .container .jumbotron #form-content .form-group label {
