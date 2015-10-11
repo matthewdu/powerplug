@@ -14,10 +14,13 @@ function updateCourier(lat, lng, img_href) {
 		marker = new google.maps.Marker({
 			position: latlng,
 			map: map,
-			icon: {
-				url: img_href,
-				scaledSize: new google.maps.Size(32,32),
-			}
+			icon: new google.maps.MarkerImage(
+				img_href,
+				null,
+				null,
+				null,
+				new google.maps.Size(64, 64)
+			)
 		});
 	} else {
 		marker.setPosition(latlng);
