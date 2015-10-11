@@ -29,6 +29,7 @@ type MainRequest struct {
 	Pm_pickup_name          string `json:"pm_pickup_name" datastore:"postmates_pickup_name"`
 	Pm_pickup_address       string `json:"pm_pickup_address" datastore:"postmates_pickup_address"`
 	Pm_pickup_phone_number  string `json:"pm_pickup_phone_number" datastore:"postmates_pickup_phone_number"`
+	Pm_delivery_id          string `json:"-" datastore:"postmates_delivery_id"`
 }
 
 func init() {
@@ -36,6 +37,7 @@ func init() {
 
 	mux.PostFunc("/buy_request", BuyRequestHandler)
 	mux.GetFunc("/request/:key", RequestHandler)
+	mux.GetFunc("/delivery_status/:key", DeliveryHandler)
 	mux.PostFunc("/accept_request/:key", AcceptRequestHandler)
 	http.Handle("/", mux)
 }
@@ -126,12 +128,39 @@ func AcceptRequestHandler(w http.ResponseWriter, r *http.Request) {
 		c.Errorf("%s", err)
 	}
 	c.Debugf("%s", co_resp.Body)
-	pm_resp, err := postmates.CreateDelivery(c, dbRequest.Cl_title, dbRequest.Pm_pickup_name, dbRequest.Pm_pickup_address, dbRequest.Pm_pickup_phone_number, "Craigslist", "", dbRequest.Pm_dropoff_name, dbRequest.Pm_dropoff_address, dbRequest.Pm_dropoff_phone_number, "Craigslist", "")
+	status, err := postmates.CreateDelivery(c, dbRequest.Cl_title, dbRequest.Pm_pickup_name, dbRequest.Pm_pickup_address, dbRequest.Pm_pickup_phone_number, "Craigslist", "", dbRequest.Pm_dropoff_name, dbRequest.Pm_dropoff_address, dbRequest.Pm_dropoff_phone_number, "Craigslist", "")
 	if err != nil {
 		c.Errorf("%s", err)
 	}
-	c.Debugf("%s", pm_resp.Body)
+	dbRequest.Pm_delivery_id = status.ID
 	if _, err := datastore.Put(c, key, &dbRequest); err != nil {
+		c.Errorf("%s", err)
+	}
+
+	// send back important info
+	err = json.NewEncoder(w).Encode(&status)
+	if err != nil {
+		c.Errorf("%s", err)
+	}
+}
+
+func DeliveryHandler(w http.ResponseWriter, r *http.Request) {
+	keyId := bone.GetValue(r, "key")
+	c := appengine.NewContext(r)
+	key, err := datastore.DecodeKey(keyId)
+	var dbRequest MainRequest
+	if err = datastore.Get(c, key, &dbRequest); err != nil {
+		c.Errorf("%s", err)
+	}
+
+	status, err := postmates.GetStatus(c, dbRequest.Pm_delivery_id)
+	if err != nil {
+		c.Errorf("%s", err)
+	}
+
+	// send back important info
+	err = json.NewEncoder(w).Encode(&status)
+	if err != nil {
 		c.Errorf("%s", err)
 	}
 }

@@ -3,6 +3,7 @@ package postmates
 import (
 	"appengine"
 	"appengine/urlfetch"
+	"encoding/json"
 	"net/http"
 	"net/url"
 	"strings"
@@ -22,11 +23,24 @@ type CreateDeliveryRequest struct {
 	Dropoff_notes         string `json:"dropoff_notes"`
 }
 
+type Status struct {
+	ID       string `json:"id"`
+	Status   string `json:"status"`
+	Complete bool   `json:"complete"`
+	Courier  struct {
+		Location struct {
+			Lat float64 `json:"lat"`
+			Lng float64 `json:"lng"`
+		} `json:"location"`
+		ImgLink string `json:"img_href"`
+	} `json:"courier"`
+}
+
 const BASE_URL string = "https://api.postmates.com"
 const CUSTOMER_ID string = "cus_KWZSpBpTC3PdsV"
 const API_KEY string = "5d8dbe7d-1897-4239-b5b3-780c2a3965d5"
 
-func CreateDelivery(c appengine.Context, manifest string, pickup_name string, pickup_address string, pickup_phone_number string, pickup_business_name string, pickup_notes string, dropoff_name string, dropoff_address string, dropoff_phone_number string, dropoff_business_name string, dropoff_notes string) (*http.Response, error) {
+func CreateDelivery(c appengine.Context, manifest string, pickup_name string, pickup_address string, pickup_phone_number string, pickup_business_name string, pickup_notes string, dropoff_name string, dropoff_address string, dropoff_phone_number string, dropoff_business_name string, dropoff_notes string) (*Status, error) {
 	client := urlfetch.Client(c)
 	postUrl := BASE_URL + "/v1/customers/" + CUSTOMER_ID + "/deliveries"
 
@@ -50,5 +64,32 @@ func CreateDelivery(c appengine.Context, manifest string, pickup_name string, pi
 	req.PostForm = form
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.SetBasicAuth(API_KEY, "")
-	return client.Do(req)
+	resp, err := client.Do(req)
+	decoder := json.NewDecoder(resp.Body)
+	var status Status
+	err = decoder.Decode(&status)
+	if err != nil {
+		return nil, err
+	}
+	return &status, nil
+}
+
+func GetStatus(c appengine.Context, delivery_id string) (*Status, error) {
+	c.Debugf("delivery id: %s", delivery_id)
+	client := urlfetch.Client(c)
+	url := BASE_URL + "/v1/customers/" + CUSTOMER_ID + "/deliveries/" + delivery_id
+	c.Debugf("url: %s", url)
+	req, err := http.NewRequest("GET", url, nil)
+	req.SetBasicAuth(API_KEY, "")
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	decoder := json.NewDecoder(resp.Body)
+	var status Status
+	err = decoder.Decode(&status)
+	if err != nil {
+		return nil, err
+	}
+	return &status, nil
 }
