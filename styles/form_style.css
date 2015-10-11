@@ -39,16 +39,30 @@ body {
         text-align: left;
         font-size: 16px; }
     body .container .jumbotron #form-content #cl_details_container {
-      max-height: 0;
+      border: 1px solid #F1F1F1;
+      height: 60px;
       overflow: hidden;
-      transition: max-height 0.5s ease-in;
-      margin-bottom: 5px; }
-      body .container .jumbotron #form-content #cl_details_container p {
+      margin-bottom: 15px; }
+      body .container .jumbotron #form-content #cl_details_container a#cl_title {
+        display: block;
+        font-size: 20px;
         text-align: center;
-        font-size: 14px;
-        margin-bottom: 15px; }
-      body .container .jumbotron #form-content #cl_details_container.open {
-        max-height: 200px; }
+        margin-bottom: 3px; }
+      body .container .jumbotron #form-content #cl_details_container p#cl_price {
+        font-size: 18px;
+        text-align: center;
+        margin-bottom: 3px; }
+      body .container .jumbotron #form-content #cl_details_container img {
+        float: left;
+        height: 100%; }
+      body .container .jumbotron #form-content #cl_details_container #close_cl_details {
+        z-index: 3;
+        position: absolute;
+        right: 0%;
+        top: 1.5%; }
+        body .container .jumbotron #form-content #cl_details_container #close_cl_details:hover {
+          cursor: pointer;
+          cursor: hand; }
     body .container .jumbotron #form-content .form-group {
       line-height: 34px; }
       body .container .jumbotron #form-content .form-group label {

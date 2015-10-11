@@ -22,13 +22,15 @@
                             </div>
                         </div>
                         <form id="buy_request_form" action="buy_request" method="post">
-                            <div class="form-group">
+                            <div id="cl_form_group" class="form-group">
                                 <label>Craigslist URL: </label>
                                 <input class="form-control" type="text" name="cl_url"></input>
                                 <span class="glyphicon glyphicon-ok checkmark hide"></span>
                             </div>
-                            <div id="cl_details_container">
-                                <p id="cl_title"></p>
+                            <div id="cl_details_container" class="hide">
+                                <span id="close_cl_details" class="glyphicon glyphicon-remove"></span>
+                                <img src="" />
+                                <a id="cl_title" href="#" target="_blank"></a>
                                 <p id="cl_price"></p>
                             </div>
                             <div class="form-group">

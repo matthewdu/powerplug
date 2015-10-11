@@ -20,24 +20,42 @@ function start_polling(key) {
 	}, 5000)
 }
 
-function update_cl(price, title) {
+function update_cl(price, title, imageUrl) {
+	if(title.length > 47) {
+		title = title.substring(0, 47) + "..."
+	}
 	titleEl = $("#cl_title");
 	titleEl.text(title);
 	priceEl = $("#cl_price");
 	priceEl.text("$" + price);
 	containerEl = $("#cl_details_container");
+	if(imageUrl) {
+		containerEl.children('img').attr('src', imageUrl);
+	} else {
+
+	}
 	if (price && title) {
-		containerEl.addClass("open");
+		containerEl.removeClass("hide");
+		$('#cl_form_group').addClass("hide");
 	}
 }
 
 $(document).ready(function() {
+	$('#close_cl_details').click(function() {
+		$('#cl_details_container').addClass('hide');
+		$('#cl_form_group').removeClass('hide');
+	});
+
 	$("input[name='cl_url']").blur(function() {
-		$.post("/get_cl", this.value, function(data) {
+		var cl_url = this.value;
+		$.post("/get_cl", cl_url, function(data) {
+			$("#cl_title").attr('href', cl_url);
 			parsed = JSON.parse(data);
 			price = parsed.price;
 			title = parsed.title;
-			update_cl(price, title);
+			imageUrl = parsed.imageUrl;
+			console.log(imageUrl);
+			update_cl(price, title, imageUrl);
 		});
 	});
 

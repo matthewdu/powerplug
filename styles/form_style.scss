@@ -55,19 +55,34 @@ body {
                                 }
 
                                 #cl_details_container {
-                                        max-height: 0;
+                                        border: 1px solid #F1F1F1;
+                                        height: 60px;
                                         overflow: hidden;
-                                        transition: max-height 0.5s ease-in;
-                                        margin-bottom: 5px;
-
-                                        p {
+                                        margin-bottom: 15px;
+                                        a#cl_title {
+                                                display: block;
+                                                font-size: 20px;
                                                 text-align: center;
-                                                font-size: 14px;
-                                                margin-bottom: 15px;
+                                                margin-bottom: 3px;
                                         }
-
-                                        &.open {
-                                                max-height: 200px;
+                                        p#cl_price {
+                                                font-size: 18px;
+                                                text-align: center;
+                                                margin-bottom: 3px;
+                                        }
+                                        img {
+                                                float: left;
+                                                height: 100%;
+                                        }
+                                        #close_cl_details {
+                                                z-index: 3;
+                                                position: absolute;
+                                                right: 0%;
+                                                top: 1.5%;
+                                                &:hover {
+                                                        cursor: pointer;
+                                                        cursor: hand;
+                                                }
                                         }
                                 }
 

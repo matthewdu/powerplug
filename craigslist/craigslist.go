@@ -13,9 +13,10 @@ import (
 )
 
 type Listing struct {
-	Url   string `json:"url"`
-	Title string `json:"title"`
-	Price int    `json:"price"`
+	Url      string `json:"url"`
+	Title    string `json:"title"`
+	Price    int    `json:"price"`
+	ImageUrl string `json:"imageUrl"`
 }
 
 func NewListing(ctx appengine.Context, url string) (*Listing, error) {
@@ -50,12 +51,20 @@ func NewListing(ctx appengine.Context, url string) (*Listing, error) {
 		ctx.Errorf("Error casting price: %s", scrape.Text(price))
 		return nil, err
 	}
+	images := scrape.FindAll(root, scrape.ByTag(atom.Img))
+	imageUrl := ""
+	for _, image := range images {
+		if scrape.Attr(image, "title") == "image 1" {
+			imageUrl = scrape.Attr(image, "src")
+		}
+	}
 
 	ctx.Debugf("Craigslist returned listing.Price: %d, listing.Title: %s", intPrice, scrape.Text(title))
 
 	return &Listing{
-		Url:   url,
-		Title: scrape.Text(title),
-		Price: intPrice,
+		Url:      url,
+		Title:    scrape.Text(title),
+		Price:    intPrice,
+		ImageUrl: imageUrl,
 	}, nil
 }
