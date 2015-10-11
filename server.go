@@ -1,14 +1,15 @@
 package powerplug
 
 import (
+	"bytes"
 	"capitalone"
 	"craigslist"
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"net/http"
 	"postmates"
+	"strconv"
 
 	"appengine"
 	"appengine/datastore"
@@ -31,6 +32,13 @@ type MainRequest struct {
 	Pm_pickup_address       string `json:"pm_pickup_address" datastore:"postmates_pickup_address"`
 	Pm_pickup_phone_number  string `json:"pm_pickup_phone_number" datastore:"postmates_pickup_phone_number"`
 	Pm_delivery_id          string `json:"-" datastore:"postmates_delivery_id"`
+}
+
+type Email struct {
+	BuyerName    string
+	ListingTitle string
+	Price        string
+	AcceptUrl    string
 }
 
 func init() {
@@ -87,18 +95,28 @@ func BuyRequestHandler(w http.ResponseWriter, r *http.Request) {
 	request.Cl_title = listing.Title
 	request.Cl_price = listing.Price
 
-	confirmMessage := "%s is interested in purchasing your %s. Please follow the link to accept the purchase:\n%s"
-
 	key, err := datastore.Put(c, datastore.NewIncompleteKey(c, "request", nil), &request)
 	if err != nil {
 		c.Errorf("Error putting purchase request into database: %s", err)
 	}
-	url := createConfirmationURL(c, key)
+	price := strconv.Itoa(listing.Price)
+	emailStruct := Email{
+		BuyerName:    request.Pm_dropoff_name,
+		ListingTitle: listing.Title,
+		Price:        price,
+		AcceptUrl:    createConfirmationURL(c, key),
+	}
+	emailTemplate, err := template.ParseFiles("email.html")
+	if err != nil {
+		c.Errorf("Error parsing template %s", err)
+	}
+	b := new(bytes.Buffer)
+	emailTemplate.ExecuteTemplate(b, "email", emailStruct)
 	msg := &mail.Message{
 		Sender:  "craigomation <craigomation@appspot.gserviceaccount.com>",
 		To:      []string{request.Cl_email},
 		Subject: "Purchase Request for \"" + listing.Title + "\"",
-		Body:    fmt.Sprintf(confirmMessage, request.Pm_dropoff_name, listing.Title, url),
+		Body:    string(b.Bytes()),
 	}
 	c.Debugf("Email body: %s", msg.Body)
 	if err := mail.Send(c, msg); err != nil {

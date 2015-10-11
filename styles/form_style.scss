@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans|Oswald);
 $background-color: #FCFCFC;
 $text-color: #585858;
 
@@ -83,6 +84,7 @@ body {
                                                 box-shadow: none;
                                                 color: $text-color;
                                                 border-color: #F1F1F1;
+                                                padding: 6px 36px 6px 12px;
 
                                                 &:hover, &:active, &:focus {
                                                         background-color: #F1F1F1;

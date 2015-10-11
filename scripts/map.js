@@ -1,23 +1,22 @@
-var map;
-var marker;
+var map2;
+var marker2;
 
 function updateMap(lat, lng, img_href) {
-	google.maps.event.trigger(map, 'resize');
+	google.maps.event.trigger(map2, 'resize');
 	latlng = {lat: lat, lng: lng};
-	if (!marker) {
-		marker = new google.maps.Marker({
+	if (!marker2) {
+		marker2 = new google.maps.Marker({
 			position: latlng,
-			map: map,
+			map: map2,
 			icon: img_href
 		});
 	} else {
-		marker.setPosition(latlng);
+		marker2.setPosition(latlng);
 	}
 }
 
 function initRequestMap() {
     $('#pac-input').on('keyup', function() {
-        console.log("hello");
         if (document.getElementById('pac-input').value == "") {
             $('#mapDiv').addClass('hide');
         }
@@ -40,6 +39,8 @@ function initRequestMap() {
 
     autocomplete.addListener('place_changed', function() {
         $('#mapDiv').removeClass('hide');
+        $('input[name=pm_dropoff_address]').siblings('span').removeClass('hide');
+        $('input[name=pm_pickup_address]').siblings('span').removeClass('hide');
         google.maps.event.trigger(map, 'resize');
 
         infowindow.close();
@@ -83,7 +84,8 @@ function initRequestMap() {
 }
 
 function initConfirmMap() {
-	map = new google.maps.Map(document.getElementById('map'), {
+    initRequestMap();
+	map2 = new google.maps.Map(document.getElementById('map2'), {
 		center: {lat: -34.397, lng: 150.644},
 		scrollwheel: false,
 		zoom: 7

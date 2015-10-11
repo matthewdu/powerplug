@@ -19,22 +19,45 @@
                         <div class="site-title">
                             <h1 class="title">Confirm the Request</h1>
                             <div class="description">
-                                Simply fill in the information below and click "Confirm Sale!" to have the money transferred to you and a Postmates delivery person will come pick up the item
+                                Simply fill in the information below and click "Confirm Sale!". A Postmates courier will arrive shortly to pick up the item. Once the item has been delivered, you will receive your payment.
                             </div>
                         </div>
                         <form id="accept_request_form" action="accept_request" method="post">
-                            <div class="form-group"><label>Craigslist URL: </label><input class="form-control" type="text" name="cl_url" value="{{.Cl_url}}" readonly></input></div>
-                            <div class="form-group"><label>Capital One ID: </label><input class="form-control" type="text" name="co_payee_id"></input></div>
-                            <div class="form-group"><label>Name: </label><input class="form-control" type="text" name="pm_pickup_name"></input></div>
-                            <div class="form-group"><label>Pickup Address: </label><input class="form-control" type="text" name="pm_pickup_address"></input></div>
-                            <div class="form-group"><label>Phone Number: </label><input class="form-control" type="text" name="pm_pickup_phone_number"></input></div>
+                            <div class="form-group">
+                                <label>Craigslist URL: </label>
+                                <input class="form-control" type="text" name="cl_url" value="{{.Cl_url}}" readonly></input>
+                                <span class="glyphicon glyphicon-ok checkmark"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Capital One ID: </label>
+                                <input class="form-control" type="text" name="co_payee_id"></input>
+                                <span class="glyphicon glyphicon-ok checkmark hide"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Name: </label>
+                                <input class="form-control" type="text" name="pm_pickup_name"></input>
+                                <span class="glyphicon glyphicon-ok checkmark hide"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Pickup Address: </label>
+                                <input id="pac-input" class="form-control" type="text" name="pm_pickup_address"></input>
+                                <span class="glyphicon glyphicon-ok checkmark hide"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number: </label>
+                                <input class="form-control" type="text" name="pm_pickup_phone_number"></input>
+                                <span class="glyphicon glyphicon-ok checkmark hide"></span>
+                            </div>
                             <div class="form-group button-group"><input class="btn btn-primary btn-lg submit-button" type="submit" value="Confirm Sale!"></input></div>
                         </form>
                     </div>
+                    <div id="mapDiv" class="hide" style="height: 480px; width: 100%;">
+                        <div id="map"></div>
+                    </div>
                     <div id="been-sent-content" class="hide">
                         <div>Thank you! Your funds should be deposited shortly and someone from Postmates should be on their way shortly. The current status of the delivery is <span id="status">pending</span>. See the map below for details:</div>
-                        <div id="mapDiv" class="hide" style="height: 480px; width: 100%;">
-                            <div id="map"></div>
+                        <div id="mapDiv2" class="hide" style="height: 480px; width: 100%;">
+                            <div id="map2"></div>
                         </div>
                     </div>
                 </div>

@@ -2,12 +2,12 @@ function update_status(status) {
 	// update the status
 	statusEl = $("#status");
 	statusEl.text(status.status);
-	// update the map
+	// update the map2
 	if (status.courier && status.courier.location && status.courier.location.lat && status.courier.location.lng) {
-		$("#map").removeClass("hide");
+		$("#map2").removeClass("hide");
 		updateMap(status.courier.location.lat, status.courier.location.lng, status.courier.img_href)
 	} else {
-		$("#map").addClass("hide");
+		$("#map2").addClass("hide");
 	}
 }
 
@@ -44,6 +44,13 @@ $(document).ready(function() {
 		});
 	});
 
+	$(window).keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+	
 	// Craigslist url
 	$('input[name=cl_url]').on('keyup', function() {
 		if(this.value.indexOf("craigslist.org") > -1) {
@@ -69,6 +76,12 @@ $(document).ready(function() {
 			$(this).siblings('span').addClass('hide');
 		}
 	});
+	// dropoff address
+	$('input[name=pm_dropoff_address]').on('keyup', function(e) {
+		if(e.keyCode === 8) {
+			$(this).siblings('span').addClass('hide');
+		}
+	});
 	// payer name
 	$('input[name=pm_dropoff_name]').on('keyup', function() {
 		if(this.value.length > 0) {
@@ -77,8 +90,33 @@ $(document).ready(function() {
 			$(this).siblings('span').addClass('hide');
 		}
 	});
-	// phone number
+	// payer phone number
 	$('input[name=pm_dropoff_phone_number]').on('keyup', function() {
+		if(this.value.length >= 10) {
+			$(this).siblings('span').removeClass('hide');
+		} else {
+			$(this).siblings('span').addClass('hide');
+		}
+	});
+
+	// Capital one payee id
+	$('input[name=co_payee_id]').on('keyup', function() {
+		if(this.value.length === 24) {
+			$(this).siblings('span').removeClass('hide');
+		} else {
+			$(this).siblings('span').addClass('hide');
+		}
+	});
+	// payee name
+	$('input[name=pm_pickup_name]').on('keyup', function() {
+		if(this.value.length > 0) {
+			$(this).siblings('span').removeClass('hide');
+		} else {
+			$(this).siblings('span').addClass('hide');
+		}
+	});
+	// payee phone number
+	$('input[name=pm_pickup_phone_number]').on('keyup', function() {
 		if(this.value.length >= 10) {
 			$(this).siblings('span').removeClass('hide');
 		} else {
@@ -122,6 +160,7 @@ $(document).ready(function() {
 		$.post("/accept_request/" + key, JSON.stringify(inputs), function(data) {
 			$("#form-content").animate({ translate: "-50px", opacity: 0 }, 200, "swing", function() {
 				$("#form-content").addClass("hide");
+				$('#mapDiv').addClass('hide');
 				$("#been-sent-content").removeClass("hide");
 				$("#been-sent-content").animate({ translate: "0", opacity: 1 }, 200, function() {
 					$("#been-sent-content").removeClass("gone");
