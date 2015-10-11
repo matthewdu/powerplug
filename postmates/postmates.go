@@ -75,16 +75,15 @@ func CreateDelivery(c appengine.Context, manifest string, pickup_name string, pi
 }
 
 func GetStatus(c appengine.Context, delivery_id string) (*Status, error) {
-	c.Debugf("delivery id: %s", delivery_id)
 	client := urlfetch.Client(c)
 	url := BASE_URL + "/v1/customers/" + CUSTOMER_ID + "/deliveries/" + delivery_id
-	c.Debugf("url: %s", url)
 	req, err := http.NewRequest("GET", url, nil)
 	req.SetBasicAuth(API_KEY, "")
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
+	c.Errorf("%s", resp.Body)
 	decoder := json.NewDecoder(resp.Body)
 	var status Status
 	err = decoder.Decode(&status)

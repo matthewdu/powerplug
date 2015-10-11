@@ -13,9 +13,9 @@ import (
 )
 
 type Listing struct {
-	Url   string
-	Title string
-	Price int
+	Url   string `json:"url"`
+	Title string `json:"title"`
+	Price int    `json:"price"`
 }
 
 func NewListing(ctx appengine.Context, url string) (*Listing, error) {

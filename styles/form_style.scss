@@ -19,7 +19,6 @@ body {
         height: 100%;
         margin: 40px, 0px, 0px, 0px;
         padding: 0;
-        
         background-color: $background-color;
         color: $text-color;
         font-family: 'Open Sans', Verdana, Geneva, sans-serif;
@@ -32,7 +31,6 @@ body {
                         height: 628px;
 
                         #form-content {
-
                                 .site-title {
                                         text-align: center;
 
@@ -47,6 +45,21 @@ body {
                                                 margin: 20px 0;
                                                 text-align: left;
                                                 font-size: 16px;
+                                        }
+                                }
+
+                                #cl_details_container {
+                                        max-height: 0;
+                                        overflow: hidden;
+                                        transition: max-height 0.5s ease-in;
+                                        margin-bottom: 5px;
+
+                                        span {
+                                                float: right;
+                                        }
+
+                                        &.open {
+                                                max-height: 200px;
                                         }
                                 }
 

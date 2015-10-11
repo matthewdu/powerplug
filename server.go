@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"net/http"
 	"postmates"
 
@@ -39,6 +40,7 @@ func init() {
 	mux.GetFunc("/request/:key", RequestHandler)
 	mux.GetFunc("/delivery_status/:key", DeliveryHandler)
 	mux.PostFunc("/accept_request/:key", AcceptRequestHandler)
+	mux.PostFunc("/get_cl", GetCL)
 	http.Handle("/", mux)
 }
 
@@ -47,6 +49,27 @@ func createConfirmationURL(c appengine.Context, key *datastore.Key) string {
 		return "http://localhost:8080/request/" + key.Encode()
 	}
 	return "http://" + appengine.AppID(c) + ".appspot.com/request/" + key.Encode()
+}
+
+func GetCL(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		c.Errorf("%s", err)
+	}
+	bstr := string(b)
+	if bstr == "" {
+		return
+	}
+	listing, err := craigslist.NewListing(c, bstr)
+	if err != nil {
+		c.Errorf("%s", err)
+	}
+
+	err = json.NewEncoder(w).Encode(&listing)
+	if err != nil {
+		c.Errorf("%s", err)
+	}
 }
 
 func BuyRequestHandler(w http.ResponseWriter, r *http.Request) {

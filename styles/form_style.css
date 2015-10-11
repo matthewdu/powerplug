@@ -34,6 +34,15 @@ body {
         margin: 20px 0;
         text-align: left;
         font-size: 16px; }
+    body .container .jumbotron #form-content #cl_details_container {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease-in;
+      margin-bottom: 5px; }
+      body .container .jumbotron #form-content #cl_details_container span {
+        float: right; }
+      body .container .jumbotron #form-content #cl_details_container.open {
+        max-height: 200px; }
     body .container .jumbotron #form-content .form-group {
       line-height: 34px; }
       body .container .jumbotron #form-content .form-group label {

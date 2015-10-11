@@ -23,9 +23,27 @@ function start_polling(key) {
 	}, 5000)
 }
 
+function update_cl(price, title) {
+	titleEl = $("#cl_title");
+	titleEl.text(title);
+	priceEl = $("#cl_price");
+	priceEl.text("$" + price);
+	containerEl = $("#cl_details_container");
+	if (price && title) {
+		containerEl.addClass("open");
+	}
+}
+
 $(document).ready(function() {
+	$("input[name='cl_url']").blur(function() {
+		$.post("/get_cl", this.value, function(data) {
+			parsed = JSON.parse(data);
+			price = parsed.price;
+			title = parsed.title;
+			update_cl(price, title);
+		});
+	});
 	$("#buy_request_form").submit(function(event) {
-		// collect vars
 		var inputs = {};
 		$("input[type=text]").each(function(){
 			if (this["name"]) {
