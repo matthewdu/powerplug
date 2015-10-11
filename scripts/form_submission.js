@@ -10,10 +10,11 @@ $(document).ready(function() {
 		// make call
 		$.post("/buy_request", JSON.stringify(inputs), function() {
 			$("#form-content").animate({ translate: "-50px", opacity: 0 }, 200, "swing", function() {
-				$("#form-content").addClass("gone");
+				$('#mapDiv').addClass('hide');
+				$("#form-content").addClass("hide");
 				$("#been-sent-content").removeClass("none");
 				$("#been-sent-content").animate({ translate: "0", opacity: 1 }, 200, function() {
-					$("#been-sent-content").removeClass("gone");
+					$("#been-sent-content").removeClass("hide");
 				});
 			});
 		});

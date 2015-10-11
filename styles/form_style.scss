@@ -1,4 +1,4 @@
-$background-color: #F8F8F8;
+$background-color: #FCFCFC;
 $text-color: #585858;
 
 html {
@@ -32,9 +32,6 @@ body {
                         height: 628px;
 
                         #form-content {
-                                &.gone {
-                                        display: none;
-                                }
 
                                 .site-title {
                                         text-align: center;
@@ -67,10 +64,10 @@ body {
                                                 border-radius: 0;
                                                 box-shadow: none;
                                                 color: $text-color;
-                                                border-color: #E8E8E8;
+                                                border-color: #F1F1F1;
 
                                                 &:hover, &:active, &:focus {
-                                                        background-color: #E8E8E8;
+                                                        background-color: #F1F1F1;
                                                 }
                                         }
 
@@ -86,7 +83,7 @@ body {
                                                         margin-top: 20px;
 
                                                         &:hover {
-                                                                background-color: #E8E8E8;
+                                                                background-color: #F1F1F1;
                                                                 transition: background-color .25s ease-in-out;
                                                                 -moz-transition: background-color .25s ease-in-out;
                                                                 -webkit-transition: background-color .25s ease-in-out;

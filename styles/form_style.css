@@ -15,16 +15,14 @@ body {
   height: 100%;
   margin: 40px, 0px, 0px, 0px;
   padding: 0;
-  background-color: #F8F8F8;
+  background-color: #FCFCFC;
   color: #585858;
   font-family: 'Open Sans', Verdana, Geneva, sans-serif; }
   body .container .jumbotron {
-    background-color: #F8F8F8;
+    background-color: #FCFCFC;
     border-radius: 0;
     border: none;
     height: 628px; }
-    body .container .jumbotron #form-content.gone {
-      display: none; }
     body .container .jumbotron #form-content .site-title {
       text-align: center; }
       body .container .jumbotron #form-content .site-title .title {
@@ -47,9 +45,9 @@ body {
         border-radius: 0;
         box-shadow: none;
         color: #585858;
-        border-color: #E8E8E8; }
+        border-color: #F1F1F1; }
         body .container .jumbotron #form-content .form-group input[type="text"]:hover, body .container .jumbotron #form-content .form-group input[type="text"]:active, body .container .jumbotron #form-content .form-group input[type="text"]:focus {
-          background-color: #E8E8E8; }
+          background-color: #F1F1F1; }
       body .container .jumbotron #form-content .form-group.button-group {
         width: 100%; }
         body .container .jumbotron #form-content .form-group.button-group .submit-button {
@@ -60,7 +58,7 @@ body {
           border-color: #585858;
           margin-top: 20px; }
           body .container .jumbotron #form-content .form-group.button-group .submit-button:hover {
-            background-color: #E8E8E8;
+            background-color: #F1F1F1;
             transition: background-color .25s ease-in-out;
             -moz-transition: background-color .25s ease-in-out;
             -webkit-transition: background-color .25s ease-in-out; }
