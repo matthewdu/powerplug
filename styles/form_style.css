@@ -68,8 +68,6 @@ body {
       height: 100%;
       justify-content: center;
       align-items: center; }
-      body .container .jumbotron #been-sent-content.none {
-        display: none; }
       body .container .jumbotron #been-sent-content.gone {
         opacity: 0;
         translation: 50px; }
@@ -80,5 +78,7 @@ body {
         font-weight: 300;
         font-size: 18px;
         margin-top: 30px; }
+      body .container .jumbotron #been-sent-content #status {
+        font-weight: bold; }
 
 /*# sourceMappingURL=form_style.css.map */

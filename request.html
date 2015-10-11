@@ -8,6 +8,7 @@
         <link rel="stylesheet" type="text/css" href="/styles/form_style.css">
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="/scripts/form_submission.js"></script>
+        <script src="/scripts/map.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     </head>
     <body>
@@ -30,12 +31,16 @@
                             <div class="form-group button-group"><input class="btn btn-primary btn-lg submit-button" type="submit" value="Confirm Sale!"></input></div>
                         </form>
                     </div>
-                    <div id="been-sent-content">
+                    <div id="been-sent-content" class="hide">
                         <div>Thank you! Your funds should be deposited shortly and someone from Postmates should be on their way shortly. The current status of the delivery is <span id="status">pending</span>. See the map below for details:</div>
+                        <div id="mapDiv" class="hide" style="height: 480px; width: 100%;">
+                            <div id="map"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqmP49hp2A3dyZYglwn5ho-RYpb69IRiI&signed_in=true&libraries=places&callback=initConfirmMap" async defer></script>
     </body>
 </html>
 {{end}}

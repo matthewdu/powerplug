@@ -1,4 +1,21 @@
-function initMap() {
+var map;
+var marker;
+
+function updateMap(lat, lng, img_href) {
+	google.maps.event.trigger(map, 'resize');
+	latlng = {lat: lat, lng: lng};
+	if (!marker) {
+		marker = new google.maps.Marker({
+			position: latlng,
+			map: map,
+			icon: img_href
+		});
+	} else {
+		marker.setPosition(latlng);
+	}
+}
+
+function initRequestMap() {
     $('#pac-input').on('keyup', function() {
         console.log("hello");
         if (document.getElementById('pac-input').value == "") {
@@ -6,7 +23,7 @@ function initMap() {
         }
     });
 
-    var map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: -33.8688, lng: 151.2195},
         zoom: 13
     });
@@ -16,7 +33,7 @@ function initMap() {
     autocomplete.bindTo('bounds', map);
 
     var infowindow = new google.maps.InfoWindow();
-    var marker = new google.maps.Marker({
+    marker = new google.maps.Marker({
         map: map,
         anchorPoint: new google.maps.Point(0, -29)
     });
@@ -63,4 +80,12 @@ function initMap() {
         infowindow.open(map, marker);
     });
     autocomplete.setTypes([]);
+}
+
+function initConfirmMap() {
+	map = new google.maps.Map(document.getElementById('map'), {
+		center: {lat: -34.397, lng: 150.644},
+		scrollwheel: false,
+		zoom: 7
+	});
 }

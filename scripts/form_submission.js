@@ -3,6 +3,12 @@ function update_status(status) {
 	statusEl = $("#status");
 	statusEl.text(status.status);
 	// update the map
+	if (status.courier && status.courier.location && status.courier.location.lat && status.courier.location.lng) {
+		$("#map").removeClass("hide");
+		updateMap(status.courier.location.lat, status.courier.location.lng, status.courier.img_href)
+	} else {
+		$("#map").addClass("hide");
+	}
 }
 
 function start_polling(key) {
@@ -31,7 +37,7 @@ $(document).ready(function() {
 			$("#form-content").animate({ translate: "-50px", opacity: 0 }, 200, "swing", function() {
 				$('#mapDiv').addClass('hide');
 				$("#form-content").addClass("hide");
-				$("#been-sent-content").removeClass("none");
+				$("#been-sent-content").removeClass("hide");
 				$("#been-sent-content").animate({ translate: "0", opacity: 1 }, 200, function() {
 					$("#been-sent-content").removeClass("hide");
 				});
@@ -55,7 +61,7 @@ $(document).ready(function() {
 		$.post("/accept_request/" + key, JSON.stringify(inputs), function(data) {
 			$("#form-content").animate({ translate: "-50px", opacity: 0 }, 200, "swing", function() {
 				$("#form-content").addClass("gone");
-				$("#been-sent-content").removeClass("none");
+				$("#been-sent-content").removeClass("hide");
 				$("#been-sent-content").animate({ translate: "0", opacity: 1 }, 200, function() {
 					$("#been-sent-content").removeClass("gone");
 					parsed = JSON.parse(data);

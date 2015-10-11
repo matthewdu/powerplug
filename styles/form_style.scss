@@ -100,10 +100,6 @@ body {
                                 justify-content: center;
                                 align-items: center;
 
-                                &.none {
-                                        display: none;
-                                }
-
                                 &.gone {
                                         opacity: 0;
                                         translation: 50px;
@@ -118,6 +114,10 @@ body {
                                         font-weight: 300;
                                         font-size: 18px;
                                         margin-top: 30px;
+                                }
+
+                                #status {
+                                        font-weight: bold;
                                 }
                         }
                 }
