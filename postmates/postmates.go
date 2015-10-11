@@ -86,6 +86,10 @@ func CreateDelivery(c appengine.Context, manifest string, pickup_name string, pi
 	decoder := json.NewDecoder(resp.Body)
 	var status Status
 	err = decoder.Decode(&status)
+	if status.ID == "" {
+		c.Errorf("Creating a delivery was unsuccessful", nil)
+		c.Errorf("%s", resp.Body)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -111,6 +115,7 @@ func GetStatus(c appengine.Context, delivery_id string) (*Status, error) {
 }
 
 func RescueDelivery(c appengine.Context) (*Status, error) {
+	c.Errorf("Attempting a rescue", nil)
 	client := urlfetch.Client(c)
 	url := BASE_URL + "/v1/customers/" + CUSTOMER_ID + "/deliveries?filter=ongoing"
 	req, err := http.NewRequest("GET", url, nil)
