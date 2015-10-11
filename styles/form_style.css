@@ -43,8 +43,10 @@ body {
       overflow: hidden;
       transition: max-height 0.5s ease-in;
       margin-bottom: 5px; }
-      body .container .jumbotron #form-content #cl_details_container span {
-        float: right; }
+      body .container .jumbotron #form-content #cl_details_container p {
+        text-align: center;
+        font-size: 14px;
+        margin-bottom: 15px; }
       body .container .jumbotron #form-content #cl_details_container.open {
         max-height: 200px; }
     body .container .jumbotron #form-content .form-group {

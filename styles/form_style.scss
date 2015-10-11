@@ -60,8 +60,10 @@ body {
                                         transition: max-height 0.5s ease-in;
                                         margin-bottom: 5px;
 
-                                        span {
-                                                float: right;
+                                        p {
+                                                text-align: center;
+                                                font-size: 14px;
+                                                margin-bottom: 15px;
                                         }
 
                                         &.open {

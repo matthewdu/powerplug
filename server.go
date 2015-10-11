@@ -116,7 +116,7 @@ func BuyRequestHandler(w http.ResponseWriter, r *http.Request) {
 		Sender:  "craigomation <craigomation@appspot.gserviceaccount.com>",
 		To:      []string{request.Cl_email},
 		Subject: "Purchase Request for \"" + listing.Title + "\"",
-		Body:    string(b.Bytes()),
+		HTMLBody:    string(b.Bytes()),
 	}
 	c.Debugf("Email body: %s", msg.Body)
 	if err := mail.Send(c, msg); err != nil {
