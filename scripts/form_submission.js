@@ -1,25 +1,3 @@
-function update_status(status) {
-	// update the status
-	statusEl = $("#status");
-	status.status && statusEl.text(status.status);
-	// update the map2
-	if (status.courier && status.courier.location && status.courier.location.lat && status.courier.location.lng) {
-		updateCourier(status.courier.location.lat, status.courier.location.lng, status.courier.img_href)
-	}
-}
-
-function start_polling(key) {
-	var timerInterval = setInterval(function() {
-		$.get("/delivery_status/" + key, function(data) {
-			parsed = JSON.parse(data);
-			if (parsed.complete || !parsed.id) {
-				clearInterval(timerInterval);
-			}
-			update_status(parsed);
-		})
-	}, 5000)
-}
-
 function update_cl(price, title, imageUrl) {
 	if(title.length > 43) {
 		title = title.substring(0, 43) + "..."
@@ -54,7 +32,6 @@ $(document).ready(function() {
 			price = parsed.price;
 			title = parsed.title;
 			imageUrl = parsed.imageUrl;
-			console.log(imageUrl);
 			update_cl(price, title, imageUrl);
 		});
 	});
@@ -180,17 +157,13 @@ $(document).ready(function() {
 		var n = window.location.href.lastIndexOf('/');
 		var key = window.location.href.substring(n + 1);
 		// make call
-		$.post("/accept_request/" + key, JSON.stringify(inputs), function(data) {
+		$.post("/accept_request/" + key, JSON.stringify(inputs), function() {
 			$("#form-content").animate({ translate: "-50px", opacity: 0 }, 200, "swing", function() {
 				$("#form-content").addClass("hide");
 				$('#mapDiv').addClass('hide');
 				$("#been-sent-content").removeClass("hide");
 				$("#been-sent-content").animate({ translate: "0", opacity: 1 }, 200, function() {
 					$("#been-sent-content").removeClass("gone");
-					parsed = JSON.parse(data);
-					setStartEnd(parsed.pickup.location, parsed.dropoff.location);
-					update_status(parsed)
-					start_polling(key);
 				});
 			});
 		});

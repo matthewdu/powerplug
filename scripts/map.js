@@ -1,7 +1,7 @@
-var map2,
-	marker2,
-	mapOptions = {
-	center: {lat: -33.8688, lng: 151.2195},
+var map,
+marker,
+mapOptions = {
+	center: {lat: 37.753608, lng: -122.448932},
 	zoom: 13
 }
 
@@ -10,29 +10,31 @@ var map2,
 function updateCourier(lat, lng, img_href) {
 	google.maps.event.trigger(map2, 'resize');
 	latlng = {lat: lat, lng: lng};
-	if (!marker2) {
-		marker2 = new google.maps.Marker({
+	if (!marker) {
+		marker = new google.maps.Marker({
 			position: latlng,
-			map: map2,
+			map: map,
 			icon: img_href
 		});
 	} else {
-		marker2.setPosition(latlng);
+		marker.setPosition(latlng);
 	}
 }
 
 function setStartEnd(startLocation, endLocation) {
-	$("#mapDiv2").removeClass("hide");
+	var bounds = new google.maps.LatLngBounds();
 	var startMarker = new google.maps.Marker({
-		position: startLocation,
+		position: new google.maps.LatLng(startLocation.lat, startLocation.lng),
 		title: "Pickup",
-		map: map2
+		map: map
 	}), endMarker = new google.maps.Marker({
-		position: endLocation,
+		position: new google.maps.LatLng(endLocation.lat, endLocation.lng),
 		title: "Dropoff",
-		map: map2
+		map: map
 	});
-	google.maps.event.trigger(map2, 'resize');
+	bounds.extend(startMarker.position);
+	bounds.extend(endMarker.position);
+	map.fitBounds(bounds);
 }
 
 function initRequestMap() {
@@ -100,7 +102,6 @@ function initRequestMap() {
     autocomplete.setTypes([]);
 }
 
-function initConfirmMap() {
-	initRequestMap();
-	map2 = new google.maps.Map(document.getElementById('map2'), mapOptions);
+function initStatusMap() {
+	map = new google.maps.Map(document.getElementById('map'), mapOptions);
 }

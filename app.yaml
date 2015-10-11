@@ -23,13 +23,13 @@ handlers:
 - url: /get_cl
   script: _go_app
 
-- url: /.*
-  static_files: index.html
-  upload: index.html
-
 - url: /status/(.*)
   static_files: status.html
   upload: status.html
+
+- url: /.*
+  static_files: index.html
+  upload: index.html
 
 skip_files:
 - ^(.*/)?\.DS_Store$
