@@ -101,7 +101,6 @@ func GetStatus(c appengine.Context, delivery_id string) (*Status, error) {
 	if err != nil {
 		return nil, err
 	}
-	c.Errorf("%s", resp.Body)
 	decoder := json.NewDecoder(resp.Body)
 	var status Status
 	err = decoder.Decode(&status)
@@ -120,7 +119,6 @@ func RescueDelivery(c appengine.Context) (*Status, error) {
 	if err != nil {
 		return nil, err
 	}
-	c.Errorf("%s", resp.Body)
 	decoder := json.NewDecoder(resp.Body)
 	var rescue Rescue
 	err = decoder.Decode(&rescue)
@@ -128,6 +126,7 @@ func RescueDelivery(c appengine.Context) (*Status, error) {
 		return nil, err
 	}
 	if rescue.Total_count == 1 {
+		c.Errorf("Rescue successful!", nil)
 		return &rescue.Data[0], nil
 	}
 	return nil, nil
