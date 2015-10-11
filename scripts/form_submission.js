@@ -52,7 +52,7 @@ $(document).ready(function() {
 		var n = window.location.href.lastIndexOf('/');
 		var key = window.location.href.substring(n + 1);
 		// make call
-		$.post("/accept_request/" + key, JSON.stringify(inputs), function() {
+		$.post("/accept_request/" + key, JSON.stringify(inputs), function(data) {
 			$("#form-content").animate({ translate: "-50px", opacity: 0 }, 200, "swing", function() {
 				$("#form-content").addClass("gone");
 				$("#been-sent-content").removeClass("none");
