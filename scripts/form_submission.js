@@ -21,8 +21,8 @@ function start_polling(key) {
 }
 
 function update_cl(price, title, imageUrl) {
-	if(title.length > 47) {
-		title = title.substring(0, 47) + "..."
+	if(title.length > 43) {
+		title = title.substring(0, 43) + "..."
 	}
 	titleEl = $("#cl_title");
 	titleEl.text(title);
@@ -32,7 +32,7 @@ function update_cl(price, title, imageUrl) {
 	if(imageUrl) {
 		containerEl.children('img').attr('src', imageUrl);
 	} else {
-
+		containerEl.children('img').attr('src', 'http://www.craigslist.org/images/peace.jpg');
 	}
 	if (price && title) {
 		containerEl.removeClass("hide");

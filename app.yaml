@@ -27,5 +27,9 @@ handlers:
   static_files: index.html
   upload: index.html
 
+- url: /status/(.*)
+  static_files: status.html
+  upload: status.html
+
 skip_files:
 - ^(.*/)?\.DS_Store$
