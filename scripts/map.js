@@ -16,7 +16,7 @@ function updateCourier(lat, lng, img_href) {
 			map: map,
 			icon: {
 				url: img_href,
-				size: new google.maps.Size(32,32),
+				scaledSize: new google.maps.Size(32,32),
 			}
 		});
 	} else {
