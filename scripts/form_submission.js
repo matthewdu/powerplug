@@ -60,7 +60,7 @@ $(document).ready(function() {
 		// make call
 		$.post("/accept_request/" + key, JSON.stringify(inputs), function(data) {
 			$("#form-content").animate({ translate: "-50px", opacity: 0 }, 200, "swing", function() {
-				$("#form-content").addClass("gone");
+				$("#form-content").addClass("hide");
 				$("#been-sent-content").removeClass("hide");
 				$("#been-sent-content").animate({ translate: "0", opacity: 1 }, 200, function() {
 					$("#been-sent-content").removeClass("gone");
