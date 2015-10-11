@@ -33,7 +33,15 @@ $(document).ready(function() {
 		var n = window.location.href.lastIndexOf('/');
 		var key = window.location.href.substring(n + 1);
 		// make call
-		$.post("/accept_request/" + key, JSON.stringify(inputs))
+		$.post("/accept_request/" + key, JSON.stringify(inputs), function() {
+			$("#form-content").animate({ translate: "-50px", opacity: 0 }, 200, "swing", function() {
+				$("#form-content").addClass("gone");
+				$("#been-sent-content").removeClass("none");
+				$("#been-sent-content").animate({ translate: "0", opacity: 1 }, 200, function() {
+					$("#been-sent-content").removeClass("gone");
+				});
+			});
+		});
 		// prevent default formdata post
 		event.preventDefault();
 	});

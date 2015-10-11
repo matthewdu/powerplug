@@ -12,17 +12,27 @@
     </head>
     <body>
         <div class="container">
-            <div class="col-md-6 col-md-offset-3">
-                <div class="jumbotron" style="background-color: #DAB7F7;">
-                    <h1>Confirm the request</h1>
-                    <form id="accept_request_form" action="accept_request" method="post">
-                        <div class="form-group"><label>Craigslist URL: </label><input class="form-control" type="text" name="cl_url" value="{{.Cl_url}}" readonly></input></div>
-                        <div class="form-group"><label>Capital One ID: </label><input class="form-control" type="text" name="co_payee_id"></input></div>
-                        <div class="form-group"><label>Name: </label><input class="form-control" type="text" name="pm_pickup_name"></input></div>
-                        <div class="form-group"><label>Pickup Address: </label><input class="form-control" type="text" name="pm_pickup_address"></input></div>
-                        <div class="form-group"><label>Phone Number: </label><input class="form-control" type="text" name="pm_pickup_phone_number"></input></div>
-                        <div class="form-group"><input class="btn btn-primary btn-lg" type="submit" value="Confirm sale!"></input></div>
-                    </form>
+            <div class="col-md-8 col-md-offset-2">
+                <div class="jumbotron">
+                    <div id="form-content">
+                        <div class="site-title">
+                            <h1 class="title">Confirm the Request</h1>
+                            <div class="description">
+                                Simply fill in the information below and click "Confirm Sale!" to have the money transferred to you and a Postmates delivery person will come pick up the item
+                            </div>
+                        </div>
+                        <form id="accept_request_form" action="accept_request" method="post">
+                            <div class="form-group"><label>Craigslist URL: </label><input class="form-control" type="text" name="cl_url" value="{{.Cl_url}}" readonly></input></div>
+                            <div class="form-group"><label>Capital One ID: </label><input class="form-control" type="text" name="co_payee_id"></input></div>
+                            <div class="form-group"><label>Name: </label><input class="form-control" type="text" name="pm_pickup_name"></input></div>
+                            <div class="form-group"><label>Pickup Address: </label><input class="form-control" type="text" name="pm_pickup_address"></input></div>
+                            <div class="form-group"><label>Phone Number: </label><input class="form-control" type="text" name="pm_pickup_phone_number"></input></div>
+                            <div class="form-group button-group"><input class="btn btn-primary btn-lg submit-button" type="submit" value="Confirm Sale!"></input></div>
+                        </form>
+                    </div>
+                    <div id="been-sent-content">
+                        <div>Thank you! Your funds should be deposited shortly and someone from Postmates should be on their way shortly. See the map below for details:</div>
+                    </div>
                 </div>
             </div>
         </div>
