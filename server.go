@@ -18,10 +18,11 @@ import (
 )
 
 type MainRequest struct {
+	Buyer_email             string `json:"buyer_email" datastore:"buyer_email"`
 	Cl_url                  string `json:"cl_url" datastore:"craigslist_url"`
 	Cl_title                string `json:"-" datastore:"craigslist_title"`
 	Cl_price                int    `json:"-" datastore:"craigslist_price"`
-	Offer                   int    `json:"offer" datastore:"offer"`
+	Offer                   int    `json:"offer,string" datastore:"offer"`
 	Cl_email                string `json:"cl_email" datastore:"craigslist_email"`
 	Co_payer_id             string `json:"co_payer_id" datastore:"capital_one_payer_id"`
 	Co_payee_id             string `json:"co_payee_id" datastore:"capital_one_payee_id"`
@@ -34,11 +35,19 @@ type MainRequest struct {
 	Pm_delivery_id          string `json:"-" datastore:"postmates_delivery_id"`
 }
 
-type Email struct {
+type ReqEmail struct {
 	BuyerName    string
 	ListingTitle string
 	Price        int
 	AcceptUrl    string
+}
+
+type StatusEmail struct {
+	BuyerName    string
+	SellerName   string
+	Price        int
+	ListingTitle string
+	StatusUrl    string
 }
 
 func init() {
@@ -57,6 +66,13 @@ func createConfirmationURL(c appengine.Context, key *datastore.Key) string {
 		return "http://localhost:8080/request/" + key.Encode()
 	}
 	return "http://" + appengine.AppID(c) + ".appspot.com/request/" + key.Encode()
+}
+
+func createStatusURL(c appengine.Context, key *datastore.Key) string {
+	if appengine.IsDevAppServer() {
+		return "http://localhost:8080/status/" + key.Encode()
+	}
+	return "http://" + appengine.AppID(c) + ".appspot.com/status/" + key.Encode()
 }
 
 func GetCL(w http.ResponseWriter, r *http.Request) {
@@ -99,21 +115,21 @@ func BuyRequestHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		c.Errorf("Error putting purchase request into database: %s", err)
 	}
-	emailStruct := Email{
+	emailStruct := ReqEmail{
 		BuyerName:    request.Pm_dropoff_name,
 		ListingTitle: listing.Title,
 		Price:        request.Offer,
 		AcceptUrl:    createConfirmationURL(c, key),
 	}
 	c.Infof("Email url: %s", emailStruct.AcceptUrl)
-	emailTemplate, err := template.ParseFiles("email.html")
+	emailTemplate, err := template.ParseFiles("new_offer_email.html")
 	if err != nil {
 		c.Errorf("Error parsing template %s", err)
 	}
 	b := new(bytes.Buffer)
 	emailTemplate.ExecuteTemplate(b, "email", emailStruct)
 	msg := &mail.Message{
-		Sender:   "craigomation <craigomation@appspot.gserviceaccount.com>",
+		Sender:   "craig-o-mation <craigomation@appspot.gserviceaccount.com>",
 		To:       []string{request.Cl_email},
 		Subject:  "Purchase Request for \"" + listing.Title + "\"",
 		HTMLBody: string(b.Bytes()),
@@ -169,6 +185,7 @@ func AcceptRequestHandler(w http.ResponseWriter, r *http.Request) {
 		c.Errorf("%s", err)
 	}
 	c.Debugf("%s", co_resp.Body)
+
 	status, err := postmates.CreateDelivery(c, dbRequest.Cl_title, dbRequest.Pm_pickup_name, dbRequest.Pm_pickup_address, dbRequest.Pm_pickup_phone_number, "Craigslist", "", dbRequest.Pm_dropoff_name, dbRequest.Pm_dropoff_address, dbRequest.Pm_dropoff_phone_number, "Craigslist", "")
 	if err != nil {
 		c.Errorf("%s", err)
@@ -176,6 +193,31 @@ func AcceptRequestHandler(w http.ResponseWriter, r *http.Request) {
 	dbRequest.Pm_delivery_id = status.ID
 	if _, err := datastore.Put(c, key, &dbRequest); err != nil {
 		c.Errorf("%s", err)
+	}
+
+	// email both parties
+	emailStruct := StatusEmail{
+		BuyerName:    dbRequest.Pm_dropoff_name,
+		SellerName:   dbRequest.Pm_pickup_name,
+		Price:        dbRequest.Offer,
+		ListingTitle: dbRequest.Cl_title,
+		StatusUrl:    createStatusURL(c, key),
+	}
+	emailTemplate, err := template.ParseFiles("finished_transaction_email.html")
+	if err != nil {
+		c.Errorf("Error parsing template %s", err)
+	}
+	b := new(bytes.Buffer)
+	emailTemplate.ExecuteTemplate(b, "email", emailStruct)
+	msg := &mail.Message{
+		Sender:   "craig-o-mation <craigomation@appspot.gserviceaccount.com>",
+		To:       []string{dbRequest.Cl_email, dbRequest.Buyer_email},
+		Subject:  dbRequest.Cl_title + " has been sold!",
+		HTMLBody: string(b.Bytes()),
+	}
+	c.Debugf("Email body: %s", msg.Body)
+	if err := mail.Send(c, msg); err != nil {
+		c.Errorf("Couldn't send email: %v", err)
 	}
 
 	// send back important info
@@ -194,9 +236,21 @@ func DeliveryHandler(w http.ResponseWriter, r *http.Request) {
 		c.Errorf("%s", err)
 	}
 
-	status, err := postmates.GetStatus(c, dbRequest.Pm_delivery_id)
-	if err != nil {
-		c.Errorf("%s", err)
+	var status *postmates.Status
+
+	if dbRequest.Pm_delivery_id == "" {
+		status, err = postmates.RescueDelivery(c)
+		if status != nil {
+			dbRequest.Pm_delivery_id = status.ID
+			if _, err := datastore.Put(c, key, &dbRequest); err != nil {
+				c.Errorf("%s", err)
+			}
+		}
+	} else {
+		status, err = postmates.GetStatus(c, dbRequest.Pm_delivery_id)
+		if err != nil {
+			c.Errorf("%s", err)
+		}
 	}
 
 	// send back important info

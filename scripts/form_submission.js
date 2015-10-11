@@ -52,6 +52,14 @@ $(document).ready(function() {
 		}
 	});
 	// Email
+	$('input[name=buyer_email]').on('keyup', function() {
+		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		if(regex.test(this.value)) {
+			$(this).siblings('span').removeClass('hide');
+		} else {
+			$(this).siblings('span').addClass('hide');
+		}
+	});
 	$('input[name=cl_email]').on('keyup', function() {
 		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 		if(regex.test(this.value)) {
@@ -127,6 +135,11 @@ $(document).ready(function() {
 	$("#buy_request_form").submit(function(event) {
 		var inputs = {};
 		$("input[type=text]").each(function(){
+			if (this["name"]) {
+				inputs[this["name"]] = this.value;
+			}
+		});
+		$("input[type=number]").each(function(){
 			if (this["name"]) {
 				inputs[this["name"]] = this.value;
 			}

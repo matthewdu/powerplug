@@ -2,7 +2,8 @@
 <html>
     <head>
         <meta charset=utf-8 />
-        <title>Craig's Automation</title>
+        <title>craig-o-mation</title>
+        <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="/scripts/form_submission.js"></script>
@@ -16,7 +17,7 @@
                 <div class="jumbotron">
                     <div id="form-content">
                         <div class="site-title">
-                            <h1 class="title">Craig's Automation</h1>
+                            <h1 class="title">craig-o-mation</h1>
                             <div class="description">
                                 Simply fill in the information below for the Craigslist item you would like to purchase, and an email will be sent to the seller. As soon as the seller approves, you will get an email confirming that the payment has been made through CapitalOne and the item will be delivered through Postmates!
                             </div>
@@ -32,6 +33,11 @@
                                 <img src="" />
                                 <a id="cl_title" href="#" target="_blank"></a>
                                 <p id="cl_price"></p>
+                            </div>
+                            <div class="form-group">
+                                <label>Your Email: </label>
+                                <input class="form-control" type="text" name="buyer_email"></input>
+                                <span class="glyphicon glyphicon-ok checkmark hide"></span>
                             </div>
                             <div class="form-group">
                                 <label>Poster's Email: </label>

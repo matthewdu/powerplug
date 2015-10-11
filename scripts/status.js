@@ -12,11 +12,11 @@ function start_polling(key) {
 	var timerInterval = setInterval(function() {
 		$.get("/delivery_status/" + key, function(data) {
 			parsed = JSON.parse(data);
-			if (parsed.complete || !parsed.id) {
+			if (parsed.complete) {
 				clearInterval(timerInterval);
 			}
-			update_status(parsed);
-		})
+			parsed.id && update_status(parsed);
+		});
 	}, 5000)
 }
 

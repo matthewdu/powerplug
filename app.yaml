@@ -27,6 +27,10 @@ handlers:
   static_files: status.html
   upload: status.html
 
+- url: /favicon.png
+  static_files: favicon.png
+  upload: favicon.png
+
 - url: /.*
   static_files: index.html
   upload: index.html

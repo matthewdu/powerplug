@@ -8,7 +8,7 @@ mapOptions = {
 
 
 function updateCourier(lat, lng, img_href) {
-	google.maps.event.trigger(map2, 'resize');
+	google.maps.event.trigger(map, 'resize');
 	latlng = {lat: lat, lng: lng};
 	if (!marker) {
 		marker = new google.maps.Marker({

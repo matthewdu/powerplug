@@ -49,6 +49,11 @@ type Status struct {
 	EndAddress string `json:"endAddress"`
 }
 
+type Rescue struct {
+	Data        []Status `json:"data"`
+	Total_count int      `json:"total_count"`
+}
+
 const BASE_URL string = "https://api.postmates.com"
 const CUSTOMER_ID string = "cus_KWZSpBpTC3PdsV"
 const API_KEY string = "5d8dbe7d-1897-4239-b5b3-780c2a3965d5"
@@ -104,4 +109,26 @@ func GetStatus(c appengine.Context, delivery_id string) (*Status, error) {
 		return nil, err
 	}
 	return &status, nil
+}
+
+func RescueDelivery(c appengine.Context) (*Status, error) {
+	client := urlfetch.Client(c)
+	url := BASE_URL + "/v1/customers/" + CUSTOMER_ID + "/deliveries?filter=ongoing"
+	req, err := http.NewRequest("GET", url, nil)
+	req.SetBasicAuth(API_KEY, "")
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	c.Errorf("%s", resp.Body)
+	decoder := json.NewDecoder(resp.Body)
+	var rescue Rescue
+	err = decoder.Decode(&rescue)
+	if err != nil {
+		return nil, err
+	}
+	if rescue.Total_count == 1 {
+		return &rescue.Data[0], nil
+	}
+	return nil, nil
 }
