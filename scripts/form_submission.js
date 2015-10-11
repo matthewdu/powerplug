@@ -105,6 +105,14 @@ $(document).ready(function() {
 			$(this).siblings('span').addClass('hide');
 		}
 	});
+	// offer
+	$('input[name=offer]').on('keyup', function() {
+		if(this.value.length > 0) {
+			$(this).siblings('span').removeClass('hide');
+		} else {
+			$(this).siblings('span').addClass('hide');
+		}
+	});
 	// payer phone number
 	$('input[name=pm_dropoff_phone_number]').on('keyup', function() {
 		if(this.value.length >= 10) {

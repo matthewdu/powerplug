@@ -67,7 +67,7 @@ body {
       line-height: 34px; }
       body .container .jumbotron #form-content .form-group label {
         margin-bottom: 0; }
-      body .container .jumbotron #form-content .form-group input[type="text"] {
+      body .container .jumbotron #form-content .form-group input[type="text"], body .container .jumbotron #form-content .form-group input[type="number"] {
         width: 70%;
         float: right;
         background-color: transparent;
@@ -76,7 +76,7 @@ body {
         color: #585858;
         border-color: #F1F1F1;
         padding: 6px 36px 6px 12px; }
-        body .container .jumbotron #form-content .form-group input[type="text"]:hover, body .container .jumbotron #form-content .form-group input[type="text"]:active, body .container .jumbotron #form-content .form-group input[type="text"]:focus {
+        body .container .jumbotron #form-content .form-group input[type="text"]:hover, body .container .jumbotron #form-content .form-group input[type="text"]:active, body .container .jumbotron #form-content .form-group input[type="text"]:focus, body .container .jumbotron #form-content .form-group input[type="number"]:hover, body .container .jumbotron #form-content .form-group input[type="number"]:active, body .container .jumbotron #form-content .form-group input[type="number"]:focus {
           background-color: #F1F1F1; }
       body .container .jumbotron #form-content .form-group.button-group {
         width: 100%; }

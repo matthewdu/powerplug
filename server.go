@@ -9,7 +9,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"postmates"
-	"strconv"
 
 	"appengine"
 	"appengine/datastore"
@@ -22,6 +21,7 @@ type MainRequest struct {
 	Cl_url                  string `json:"cl_url" datastore:"craigslist_url"`
 	Cl_title                string `json:"-" datastore:"craigslist_title"`
 	Cl_price                int    `json:"-" datastore:"craigslist_price"`
+	Offer                   int    `json:"offer" datastore:"offer"`
 	Cl_email                string `json:"cl_email" datastore:"craigslist_email"`
 	Co_payer_id             string `json:"co_payer_id" datastore:"capital_one_payer_id"`
 	Co_payee_id             string `json:"co_payee_id" datastore:"capital_one_payee_id"`
@@ -37,7 +37,7 @@ type MainRequest struct {
 type Email struct {
 	BuyerName    string
 	ListingTitle string
-	Price        string
+	Price        int
 	AcceptUrl    string
 }
 
@@ -99,11 +99,10 @@ func BuyRequestHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		c.Errorf("Error putting purchase request into database: %s", err)
 	}
-	price := strconv.Itoa(listing.Price)
 	emailStruct := Email{
 		BuyerName:    request.Pm_dropoff_name,
 		ListingTitle: listing.Title,
-		Price:        price,
+		Price:        request.Offer,
 		AcceptUrl:    createConfirmationURL(c, key),
 	}
 	c.Infof("Email url: %s", emailStruct.AcceptUrl)
@@ -114,10 +113,10 @@ func BuyRequestHandler(w http.ResponseWriter, r *http.Request) {
 	b := new(bytes.Buffer)
 	emailTemplate.ExecuteTemplate(b, "email", emailStruct)
 	msg := &mail.Message{
-		Sender:  "craigomation <craigomation@appspot.gserviceaccount.com>",
-		To:      []string{request.Cl_email},
-		Subject: "Purchase Request for \"" + listing.Title + "\"",
-		HTMLBody:    string(b.Bytes()),
+		Sender:   "craigomation <craigomation@appspot.gserviceaccount.com>",
+		To:       []string{request.Cl_email},
+		Subject:  "Purchase Request for \"" + listing.Title + "\"",
+		HTMLBody: string(b.Bytes()),
 	}
 	c.Debugf("Email body: %s", msg.Body)
 	if err := mail.Send(c, msg); err != nil {
@@ -165,7 +164,7 @@ func AcceptRequestHandler(w http.ResponseWriter, r *http.Request) {
 	dbRequest.Pm_pickup_address = request.Pm_pickup_address
 	dbRequest.Pm_pickup_phone_number = request.Pm_pickup_phone_number
 
-	co_resp, err := capitalone.CreateTransfer(c, dbRequest.Co_payer_id, dbRequest.Co_payee_id, dbRequest.Cl_price)
+	co_resp, err := capitalone.CreateTransfer(c, dbRequest.Co_payer_id, dbRequest.Co_payee_id, dbRequest.Offer)
 	if err != nil {
 		c.Errorf("%s", err)
 	}
