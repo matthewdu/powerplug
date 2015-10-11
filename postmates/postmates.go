@@ -89,6 +89,7 @@ func CreateDelivery(c appengine.Context, manifest string, pickup_name string, pi
 	if status.ID == "" {
 		c.Errorf("Creating a delivery was unsuccessful", nil)
 		c.Errorf("%s", resp.Body)
+		c.Errorf("%s", resp)
 	}
 	if err != nil {
 		return nil, err
