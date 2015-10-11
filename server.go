@@ -106,6 +106,7 @@ func BuyRequestHandler(w http.ResponseWriter, r *http.Request) {
 		Price:        price,
 		AcceptUrl:    createConfirmationURL(c, key),
 	}
+	c.Infof("Email url: %s", emailStruct.AcceptUrl)
 	emailTemplate, err := template.ParseFiles("email.html")
 	if err != nil {
 		c.Errorf("Error parsing template %s", err)

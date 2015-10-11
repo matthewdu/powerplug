@@ -34,6 +34,19 @@ type Status struct {
 		} `json:"location"`
 		ImgLink string `json:"img_href"`
 	} `json:"courier"`
+	Pickup struct {
+		Location struct {
+			Lat float64 `json:"lat"`
+			Lng float64 `json:"lng"`
+		} `json:"location"`
+	} `json:"pickup"`
+	Dropoff struct {
+		Location struct {
+			Lat float64 `json:"lat"`
+			Lng float64 `json:"lng"`
+		} `json:"location"`
+	} `json:"dropoff"`
+	EndAddress string `json:"endAddress"`
 }
 
 const BASE_URL string = "https://api.postmates.com"

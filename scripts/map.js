@@ -1,7 +1,13 @@
-var map2;
-var marker2;
+var map2,
+	marker2,
+	mapOptions = {
+	center: {lat: -33.8688, lng: 151.2195},
+	zoom: 13
+}
 
-function updateMap(lat, lng, img_href) {
+
+
+function updateCourier(lat, lng, img_href) {
 	google.maps.event.trigger(map2, 'resize');
 	latlng = {lat: lat, lng: lng};
 	if (!marker2) {
@@ -15,6 +21,20 @@ function updateMap(lat, lng, img_href) {
 	}
 }
 
+function setStartEnd(startLocation, endLocation) {
+	$("#mapDiv2").removeClass("hide");
+	var startMarker = new google.maps.Marker({
+		position: startLocation,
+		title: "Pickup",
+		map: map2
+	}), endMarker = new google.maps.Marker({
+		position: endLocation,
+		title: "Dropoff",
+		map: map2
+	});
+	google.maps.event.trigger(map2, 'resize');
+}
+
 function initRequestMap() {
     $('#pac-input').on('keyup', function() {
         if (document.getElementById('pac-input').value == "") {
@@ -22,10 +42,7 @@ function initRequestMap() {
         }
     });
 
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -33.8688, lng: 151.2195},
-        zoom: 13
-    });
+    map = new google.maps.Map(document.getElementById('map'), mapOptions);
     var input = (document.getElementById('pac-input'));
 
     var autocomplete = new google.maps.places.Autocomplete(input);
@@ -84,10 +101,6 @@ function initRequestMap() {
 }
 
 function initConfirmMap() {
-    initRequestMap();
-	map2 = new google.maps.Map(document.getElementById('map2'), {
-		center: {lat: -34.397, lng: 150.644},
-		scrollwheel: false,
-		zoom: 7
-	});
+	initRequestMap();
+	map2 = new google.maps.Map(document.getElementById('map2'), mapOptions);
 }
