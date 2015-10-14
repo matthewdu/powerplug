@@ -15,17 +15,17 @@ After a user has found a desirable product on Craigslist, he/she copies and past
 - Email and datastore are provided with App Engine, where the app is hosted
 - Also use Google Maps API for frontend forms to ease entering of addresses
 
-###Challenges I ran into
+###Challenges we ran into
 Craigslist is extremely strict about bots and automation. They have IP blocked many large cloud computing companies and have imposed other restrictions to make scraping and automation extremely challenging. We were able to get a home server running that we could proxy requests through in order to scrape data from Craigslist.
 
-###Accomplishments that I'm proud of
+###Accomplishments that we're proud of
 - The UI is simple, helpful, and intuitive
 - The emails have styling beyond basic text emails
 - The Craigslist proxy was challenging to implement and works quite well
 - The backend is very efficient due to design decisions
 - We were successfully able to integrate with Postmates and Capital One APIs
 
-###What I learned
+###What we learned
 - Get it done mentality. There is always a way to make novel innovations, it just takes perseverance
 - Some problems stumped us for many hours but in the end we did not need to compromise on functionality
 
